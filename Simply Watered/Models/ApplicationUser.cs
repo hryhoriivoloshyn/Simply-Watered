@@ -8,5 +8,6 @@ namespace Simply_Watered.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public virtual IEnumerable<RegionGroups> RegionGroups { get; set; }
     }
 }

@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Simply_Watered.Data.Migrations
+namespace Simply_Watered.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class CreateTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -61,6 +61,19 @@ namespace Simply_Watered.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeviceCodes", x => x.UserCode);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IrrigationModes",
+                columns: table => new
+                {
+                    IrrigModeId = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ModeName = table.Column<string>(maxLength: 450, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IrrigationModes", x => x.IrrigModeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -186,6 +199,142 @@ namespace Simply_Watered.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "RegionGroups",
+                columns: table => new
+                {
+                    RegionGroupId = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GroupName = table.Column<string>(maxLength: 450, nullable: false),
+                    RegionGroupDescription = table.Column<string>(maxLength: 450, nullable: true),
+                    UserId = table.Column<string>(maxLength: 450, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RegionGroups", x => x.RegionGroupId);
+                    table.ForeignKey(
+                        name: "FK_RegionGroups_Users",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Regions",
+                columns: table => new
+                {
+                    RegionId = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RegionName = table.Column<string>(maxLength: 450, nullable: true),
+                    RegionDescription = table.Column<string>(maxLength: 450, nullable: true),
+                    RegionGroupId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Regions", x => x.RegionId);
+                    table.ForeignKey(
+                        name: "FK_Regions_RegionGroups",
+                        column: x => x.RegionGroupId,
+                        principalTable: "RegionGroups",
+                        principalColumn: "RegionGroupId",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Devices",
+                columns: table => new
+                {
+                    DeviceId = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DeviceName = table.Column<string>(maxLength: 450, nullable: false),
+                    DeviceDescription = table.Column<string>(maxLength: 450, nullable: true),
+                    IrrigModeId = table.Column<long>(nullable: false, defaultValueSql: "((1))"),
+                    RegionId = table.Column<long>(nullable: true),
+                    IrrigScheduleId = table.Column<long>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Devices", x => x.DeviceId);
+                    table.ForeignKey(
+                        name: "FK_Devices_IrrigationModes",
+                        column: x => x.IrrigModeId,
+                        principalTable: "IrrigationModes",
+                        principalColumn: "IrrigModeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Devices_Regions",
+                        column: x => x.RegionId,
+                        principalTable: "Regions",
+                        principalColumn: "RegionId",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeviceReadings",
+                columns: table => new
+                {
+                    ReadingId = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReadingDateTime = table.Column<DateTime>(nullable: false),
+                    ReadingTemp = table.Column<double>(nullable: true),
+                    ReadingHumidity = table.Column<double>(nullable: true),
+                    DeviceId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeviceReadings", x => x.ReadingId);
+                    table.ForeignKey(
+                        name: "FK_DeviceReadings_Devices",
+                        column: x => x.DeviceId,
+                        principalTable: "Devices",
+                        principalColumn: "DeviceId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IrrigationSchedules",
+                columns: table => new
+                {
+                    IrrigScheduleId = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IrrigScheduleName = table.Column<string>(maxLength: 450, nullable: false),
+                    SheduleStartDate = table.Column<DateTime>(nullable: false),
+                    ScheduleEndDate = table.Column<DateTime>(nullable: true),
+                    DeviceId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IrrigationSchedules", x => x.IrrigScheduleId);
+                    table.ForeignKey(
+                        name: "FK_IrrigationSchedules_Devices",
+                        column: x => x.DeviceId,
+                        principalTable: "Devices",
+                        principalColumn: "DeviceId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ScheduleTimespans",
+                columns: table => new
+                {
+                    TimespanId = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Start = table.Column<TimeSpan>(nullable: false),
+                    Finish = table.Column<TimeSpan>(nullable: false),
+                    IrrigScheduleId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScheduleTimespans", x => x.TimespanId);
+                    table.ForeignKey(
+                        name: "FK_ScheduleTimespans_IrrigationSchedules",
+                        column: x => x.IrrigScheduleId,
+                        principalTable: "IrrigationSchedules",
+                        principalColumn: "IrrigScheduleId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -237,6 +386,26 @@ namespace Simply_Watered.Data.Migrations
                 column: "Expiration");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DeviceReadings_DeviceId",
+                table: "DeviceReadings",
+                column: "DeviceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Devices_IrrigModeId",
+                table: "Devices",
+                column: "IrrigModeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Devices_RegionId",
+                table: "Devices",
+                column: "RegionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IrrigationSchedules_DeviceId",
+                table: "IrrigationSchedules",
+                column: "DeviceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
                 table: "PersistedGrants",
                 column: "Expiration");
@@ -245,6 +414,21 @@ namespace Simply_Watered.Data.Migrations
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "ClientId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RegionGroups_UserId",
+                table: "RegionGroups",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Regions_RegionGroupId",
+                table: "Regions",
+                column: "RegionGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ScheduleTimespans_IrrigScheduleId",
+                table: "ScheduleTimespans",
+                column: "IrrigScheduleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -268,10 +452,31 @@ namespace Simply_Watered.Data.Migrations
                 name: "DeviceCodes");
 
             migrationBuilder.DropTable(
+                name: "DeviceReadings");
+
+            migrationBuilder.DropTable(
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
+                name: "ScheduleTimespans");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "IrrigationSchedules");
+
+            migrationBuilder.DropTable(
+                name: "Devices");
+
+            migrationBuilder.DropTable(
+                name: "IrrigationModes");
+
+            migrationBuilder.DropTable(
+                name: "Regions");
+
+            migrationBuilder.DropTable(
+                name: "RegionGroups");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

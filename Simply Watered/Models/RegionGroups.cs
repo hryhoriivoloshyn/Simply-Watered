@@ -19,6 +19,8 @@ namespace Simply_Watered.Models
         public string RegionGroupDescription { get; set; }
         public string UserId { get; set; }
 
+        public virtual ApplicationUser User { get; set; }
+
         public virtual ICollection<Regions> Regions { get; set; }
     }
 }
