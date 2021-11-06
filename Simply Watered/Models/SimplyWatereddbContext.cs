@@ -65,6 +65,12 @@ namespace Simply_Watered.Models
                     .HasForeignKey(d => d.IrrigModeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Devices_IrrigationModes");
+
+                entity.HasOne(d => d.Region)
+                    .WithMany(p => p.Devices)
+                    .HasForeignKey(d => d.RegionId)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("FK_Devices_Regions");
             });
 
             modelBuilder.Entity<IrrigationModes>(entity =>
@@ -112,12 +118,6 @@ namespace Simply_Watered.Models
                 entity.Property(e => e.RegionDescription).HasMaxLength(450);
 
                 entity.Property(e => e.RegionName).HasMaxLength(450);
-
-                entity.HasOne(d => d.Device)
-                    .WithMany(p => p.Regions)
-                    .HasForeignKey(d => d.DeviceId)
-                    .OnDelete(DeleteBehavior.SetNull)
-                    .HasConstraintName("FK_Regions_Devices1");
 
                 entity.HasOne(d => d.RegionGroup)
                     .WithMany(p => p.Regions)

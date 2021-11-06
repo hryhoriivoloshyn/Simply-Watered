@@ -9,13 +9,17 @@ namespace Simply_Watered.Models
 {
     public partial class Regions
     {
+        public Regions()
+        {
+            Devices = new HashSet<Devices>();
+        }
+
         public long RegionId { get; set; }
         public string RegionName { get; set; }
-        public long? DeviceId { get; set; }
         public string RegionDescription { get; set; }
         public long? RegionGroupId { get; set; }
 
-        public virtual Devices Device { get; set; }
         public virtual RegionGroups RegionGroup { get; set; }
+        public virtual ICollection<Devices> Devices { get; set; }
     }
 }
