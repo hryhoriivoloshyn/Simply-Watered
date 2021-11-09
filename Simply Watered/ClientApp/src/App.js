@@ -7,18 +7,21 @@ import { Counter } from './components/Counter';
 import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
 import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
 import { ApplicationPaths } from './components/api-authorization/ApiAuthorizationConstants';
+import { RegionGroups } from './components/RegionGroups';
+/*import { GroupForm } from './components/RegionGroups';*/
+import { GroupList } from './components/RegionGroups';
 
 import './custom.css'
 
 export default class App extends Component {
   static displayName = App.name;
-
   render () {
     return (
       <Layout>
         <Route exact path='/' component={Home} />
         <Route path='/counter' component={Counter} />
-        <AuthorizeRoute path='/fetch-data' component={FetchData} />
+        <AuthorizeRoute path='/fetch-data' component={FetchData} /> 
+        <AuthorizeRoute path='/region-groups' component={GroupList} />
         <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
       </Layout>
     );
