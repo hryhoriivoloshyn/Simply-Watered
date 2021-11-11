@@ -39,31 +39,32 @@ namespace Simply_Watered.Controllers
             return groups;
         }
 
-        [HttpPost]
-        public IActionResult Post(RegionGroups regionGroup)
+        public class DeleteModel
         {
-            _context.RegionGroups.Update(regionGroup);
-            _context.SaveChangesAsync();
-            return Ok(regionGroup);
+            public int id { get; set; }
         }
 
-        [HttpPost]
-        public IActionResult Delete(int? groupId)
+        [HttpPost("delete")]
+        public async Task<IActionResult> Delete([FromBody] DeleteModel groupModel)
         {
+            var groupId = groupModel.id;
             if (groupId != null)
             {
                 RegionGroups group = _context.RegionGroups.FirstOrDefault(g => g.RegionGroupId == groupId);
                 if (group != null)
                 {
                     _context.RegionGroups.Remove(group);
-                    _context.SaveChangesAsync();
-                    return Ok(group);
+                    await _context.SaveChangesAsync();
+                    return Ok(groupModel);
                 }
-                   
+
             }
 
             return NotFound();
+            
         }
 
+        
+       
     }
 }

@@ -10,6 +10,9 @@ import { ApplicationPaths } from './components/api-authorization/ApiAuthorizatio
 import { RegionGroups } from './components/RegionGroups';
 /*import { GroupForm } from './components/RegionGroups';*/
 import { GroupList } from './components/RegionGroups';
+import {GroupAdding} from './components/RegionGroupsAdding';
+import {RegionList} from './components/Regions';
+import {RegionAdding} from './components/RegionsAdding';
 
 import './custom.css'
 
@@ -22,6 +25,9 @@ export default class App extends Component {
         <Route path='/counter' component={Counter} />
         <AuthorizeRoute path='/fetch-data' component={FetchData} /> 
         <AuthorizeRoute path='/region-groups' component={GroupList} />
+        <AuthorizeRoute path='/region-groups-add' component={GroupAdding} />
+        <AuthorizeRoute path='/regions' component={RegionList} />
+        <AuthorizeRoute path='/regions-add' component={RegionAdding} />
         <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
       </Layout>
     );
