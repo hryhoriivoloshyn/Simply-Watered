@@ -9,7 +9,9 @@ export class RegionList extends Component{
         super(props)
         this.state={
             regions: [],
-            regionGroup: null,
+            regionGroup: {GroupName:"",
+                          GroupDescription: ""
+                         },
             groupId: this.props.location.state.groupId
         }
     }
@@ -46,9 +48,11 @@ export class RegionList extends Component{
     render(){
         //const state= this.props.location.state;
         let regions=this.state.regions;
+        let groupName=this.state.regionGroup.groupName;
         return(
             <>
-            {/* <div>{this.state.regionGroup.groupName}</div> */}
+            
+            <div>{groupName}</div>
             <Link
                  to=
                 {{
