@@ -21,7 +21,8 @@ namespace Simply_Watered.Models
         public long IrrigModeId { get; set; }
         public long? RegionId { get; set; }
         public long? IrrigScheduleId { get; set; }
-        
+        public double? MinimalHumidity { get; set; }
+        public double? MaxHumidity { get; set; }
 
         public virtual IrrigationModes IrrigMode { get; set; }
         public virtual Regions Region { get; set; }
