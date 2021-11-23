@@ -60,6 +60,10 @@ namespace Simply_Watered.Data
                     .IsRequired()
                     .HasMaxLength(450);
 
+                entity.Property(e => e.SerialNumber)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
                 entity.Property(e => e.IrrigModeId).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.IrrigMode)

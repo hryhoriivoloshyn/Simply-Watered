@@ -13,6 +13,7 @@ import { GroupList } from './components/RegionGroups';
 import {GroupAdding} from './components/RegionGroupsAdding';
 import {RegionList} from './components/Regions';
 import {RegionAdding} from './components/RegionsAdding';
+import { DeviceList } from './components/Devices';
 
 import './custom.css'
 
@@ -28,6 +29,7 @@ export default class App extends Component {
         <AuthorizeRoute path='/region-groups-add' component={GroupAdding} />
         <AuthorizeRoute path='/regions' component={RegionList} />
         <AuthorizeRoute path='/regions-add' component={RegionAdding} />
+        <AuthorizeRoute path='/devices' component={DeviceList} />
         <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
       </Layout>
     );

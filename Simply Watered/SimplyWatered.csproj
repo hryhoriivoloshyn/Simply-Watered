@@ -36,6 +36,8 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20211106101841_ConstraintforUserRegionGroups.cs" />
     <Compile Remove="Data\Migrations\20211106101841_ConstraintforUserRegionGroups.Designer.cs" />
+    <Compile Remove="Migrations\20211122084421_SerialNumberAddition.cs" />
+    <Compile Remove="Migrations\20211122084421_SerialNumberAddition.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
