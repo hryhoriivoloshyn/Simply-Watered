@@ -38,6 +38,10 @@
     <Compile Remove="Data\Migrations\20211106101841_ConstraintforUserRegionGroups.Designer.cs" />
     <Compile Remove="Migrations\20211122084421_SerialNumberAddition.cs" />
     <Compile Remove="Migrations\20211122084421_SerialNumberAddition.Designer.cs" />
+    <Compile Remove="Migrations\20211123123429_RegionsAndModesSetNullChange.cs" />
+    <Compile Remove="Migrations\20211123123429_RegionsAndModesSetNullChange.Designer.cs" />
+    <Compile Remove="Migrations\20211123123847_RegionsAndModesSetNullChange.cs" />
+    <Compile Remove="Migrations\20211123123847_RegionsAndModesSetNullChange.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

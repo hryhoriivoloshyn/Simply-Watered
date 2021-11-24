@@ -15,6 +15,7 @@ export class GroupList extends Component {
         }
     }
 
+
     onClick(regiongroup){
             this.onRemoveGroup(regiongroup);
     }
@@ -53,13 +54,19 @@ export class GroupList extends Component {
 
         let regiongroups=this.state.regiongroups;
         return (
-            <><Link to="/region-groups-add">Додати групу</Link>
+            <>
+            <h2 className="text-center">Групи ділянок</h2>
+            <hr />
+
+            <Link to="/region-groups-add" className="btn btn-primary mx-3" role="button" >Додати групу</Link>
+
         
-            <table className='table table-striped' aria-labelledby="tabelLabel">
+            <table className='table table-striped text-center mt-3' aria-labelledby="tabelLabel">
                 <thead>
                     <tr>
                         <th>Назва</th>
                         <th>Опис</th>
+                        <th colSpan="2">Дії</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,8 +74,10 @@ export class GroupList extends Component {
                     {regiongroups.map(regiongroup => <tr key={regiongroup.regionGroupId}>
                         <td>{regiongroup.groupName}</td>
                         <td>{regiongroup.regionGroupDescription}</td>
-                        <td><button onClick={async () => { await this.onRemoveGroup(regiongroup); } }>Видалити</button></td>
+                        <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveGroup(regiongroup); } }>Видалити</button></td>
                         <td><Link
+                        className="btn btn-outline-primary"
+                        role="button"
                         to=
                         {{
                         pathname: '/regions',
@@ -76,7 +85,7 @@ export class GroupList extends Component {
                         }}
 
                         >
-                         Ділянки групи
+                         Переглянути ділянки
                         </Link>
                         </td>
                     </tr>

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Simply_Watered.Data;
 
 namespace Simply_Watered.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211124082104_NormalizedDateTime")]
+    partial class NormalizedDateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -311,10 +313,7 @@ namespace Simply_Watered.Migrations
                     b.Property<long>("DeviceId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("NormalizedDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedTime")
+                    b.Property<string>("NormalizedDateTime")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ReadingDateTime")

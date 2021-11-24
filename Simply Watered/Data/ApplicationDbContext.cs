@@ -21,11 +21,13 @@ namespace Simply_Watered.Data
 
         public virtual DbSet<DeviceReadings> DeviceReadings { get; set; }
         public virtual DbSet<Devices> Devices { get; set; }
+        public virtual DbSet<DeviceTypes> DeviceTypes { get; set; }
         public virtual DbSet<IrrigationModes> IrrigationModes { get; set; }
         public virtual DbSet<IrrigationSchedules> IrrigationSchedules { get; set; }
         public virtual DbSet<RegionGroups> RegionGroups { get; set; }
         public virtual DbSet<Regions> Regions { get; set; }
         public virtual DbSet<ScheduleTimespans> ScheduleTimespans { get; set; }
+       
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -54,11 +56,7 @@ namespace Simply_Watered.Data
             {
                 entity.HasKey(e => e.DeviceId);
 
-                entity.Property(e => e.DeviceDescription).HasMaxLength(450);
-
-                entity.Property(e => e.DeviceName)
-                    .IsRequired()
-                    .HasMaxLength(450);
+                
 
                 entity.Property(e => e.SerialNumber)
                     .IsRequired()
@@ -69,7 +67,7 @@ namespace Simply_Watered.Data
                 entity.HasOne(d => d.IrrigMode)
                     .WithMany(p => p.Devices)
                     .HasForeignKey(d => d.IrrigModeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_Devices_IrrigationModes");
 
                 entity.HasOne(d => d.Region)
@@ -77,6 +75,26 @@ namespace Simply_Watered.Data
                     .HasForeignKey(d => d.RegionId)
                     .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_Devices_Regions");
+
+                entity.HasOne(d => d.DeviceType)
+                    .WithMany(t => t.Devices)
+                    .HasForeignKey(d=>d.TypeId)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("FK_Devices_DeviceTypes");
+
+            });
+
+            modelBuilder.Entity<DeviceTypes>(entity =>
+            {
+                entity.HasKey(e => e.TypeId);
+
+                entity.Property(e => e.DeviceDescription)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.Property(e => e.DeviceName)
+                    .IsRequired()
+                    .HasMaxLength(450);
             });
 
             modelBuilder.Entity<IrrigationModes>(entity =>
@@ -133,7 +151,7 @@ namespace Simply_Watered.Data
                 entity.HasOne(d => d.RegionGroup)
                     .WithMany(p => p.Regions)
                     .HasForeignKey(d => d.RegionGroupId)
-                    .OnDelete(DeleteBehavior.SetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Regions_RegionGroups");
             });
 

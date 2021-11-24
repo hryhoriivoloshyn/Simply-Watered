@@ -37,12 +37,16 @@ namespace Simply_Watered.Controllers
             public int id { get; set; }
         }
         [HttpPost("load")]
-        public async Task<JsonResult> LoadRegions([FromBody] RegionIdModel groupIdModel)
+        public async Task<JsonResult> Load([FromBody] RegionIdModel groupIdModel)
         {
             var regionId = groupIdModel.id;
             if (groupIdModel != null)
             {
                 IEnumerable<Devices> devices = _context.Devices.Where(r => r.RegionId == regionId).ToArray();
+                foreach (var device in devices)
+                {
+                    device.DeviceType = await _context.DeviceTypes.Where(t => t.TypeId == device.TypeId).FirstOrDefaultAsync();
+                }
                 Regions region = await _context.Regions.Where(g => g.RegionId == regionId).FirstOrDefaultAsync();
                 DevicesViewModel viewModel = new DevicesViewModel()
                 {
@@ -100,6 +104,7 @@ namespace Simply_Watered.Controllers
                 var serialNumber = inputModel.SerialNumber;
                 var regionId = inputModel.regionId;
                 Devices device = _context.Devices.FirstOrDefault(r => r.SerialNumber == serialNumber);
+                
                 if (device != null)
                 {
                     if (device.RegionId != null)

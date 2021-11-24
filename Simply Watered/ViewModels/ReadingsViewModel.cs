@@ -6,11 +6,9 @@ using Simply_Watered.Models;
 
 namespace Simply_Watered.ViewModels
 {
-    public class DevicesViewModel
+    public class ReadingsViewModel
     {
-        public Regions Region { get; set; }
-        public IEnumerable<Devices> Devices { get; set; }
-        
-        
+        public IEnumerable<DeviceReadings> Readings { get; set; }
+        public Devices Device { get; set; }
     }
 }

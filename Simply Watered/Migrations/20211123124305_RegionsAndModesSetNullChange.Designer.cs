@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Simply_Watered.Data;
 
 namespace Simply_Watered.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211123124305_RegionsAndModesSetNullChange")]
+    partial class RegionsAndModesSetNullChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -311,12 +313,6 @@ namespace Simply_Watered.Migrations
                     b.Property<long>("DeviceId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("NormalizedDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedTime")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("ReadingDateTime")
                         .HasColumnType("datetime2");
 
@@ -333,15 +329,14 @@ namespace Simply_Watered.Migrations
                     b.ToTable("DeviceReadings");
                 });
 
-            modelBuilder.Entity("Simply_Watered.Models.DeviceTypes", b =>
+            modelBuilder.Entity("Simply_Watered.Models.Devices", b =>
                 {
-                    b.Property<long>("TypeId")
+                    b.Property<long>("DeviceId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("DeviceDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasMaxLength(450);
 
@@ -349,18 +344,6 @@ namespace Simply_Watered.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasMaxLength(450);
-
-                    b.HasKey("TypeId");
-
-                    b.ToTable("DeviceTypes");
-                });
-
-            modelBuilder.Entity("Simply_Watered.Models.Devices", b =>
-                {
-                    b.Property<long>("DeviceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<long?>("IrrigModeId")
                         .HasColumnType("bigint")
@@ -383,16 +366,11 @@ namespace Simply_Watered.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasMaxLength(450);
 
-                    b.Property<long?>("TypeId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("DeviceId");
 
                     b.HasIndex("IrrigModeId");
 
                     b.HasIndex("RegionId");
-
-                    b.HasIndex("TypeId");
 
                     b.ToTable("Devices");
                 });
@@ -591,12 +569,6 @@ namespace Simply_Watered.Migrations
                         .WithMany("Devices")
                         .HasForeignKey("RegionId")
                         .HasConstraintName("FK_Devices_Regions")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Simply_Watered.Models.DeviceTypes", "DeviceType")
-                        .WithMany("Devices")
-                        .HasForeignKey("TypeId")
-                        .HasConstraintName("FK_Devices_DeviceTypes")
                         .OnDelete(DeleteBehavior.SetNull);
                 });
 

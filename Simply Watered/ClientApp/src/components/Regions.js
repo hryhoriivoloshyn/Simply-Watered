@@ -16,7 +16,9 @@ export class RegionList extends Component{
         }
     }
 
-
+    goBack =()=>{
+        this.props.history.goBack();
+    }
 
     onRemoveRegion= async(region)=>{
 
@@ -52,20 +54,27 @@ export class RegionList extends Component{
         return(
             <>
             
-            <div>{groupName}</div>
+            <h2 className="text-center">Ділянки групи "{groupName}"</h2>
+            <hr />
+
             <Link
-                 to=
+                className="btn btn-primary mx-3"
+                role="button"
+                to=
                 {{
                 pathname: '/regions-add',
                 state: { groupId: this.state.groupId }
                 }}
                 >Додати ділянку</Link>
-        
-            <table className='table table-striped' aria-labelledby="tabelLabel">
+
+            <button className="btn btn-secondary" onClick={this.goBack}>Повернутися</button>
+
+            <table className='table table-striped text-center mt-3' aria-labelledby="tabelLabel">
                 <thead>
                     <tr>
                         <th>Назва</th>
                         <th>Опис</th>
+                        <th colSpan="2">Дії</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,24 +82,27 @@ export class RegionList extends Component{
                     {regions.map(region => <tr key={region.regionId}>
                         <td>{region.regionName}</td>
                         <td>{region.regionDescription}</td>
-                        <td><button onClick={async () => { await this.onRemoveRegion(region); } }>Видалити</button></td>
-                        <td><Link
-                        to=
-                        {{
-                        pathname: '/devices',
-                        state: { regionId: region.regionId }
-                        }}
+                        <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveRegion(region); } }>Видалити</button></td>
+                        <td>
+                        <Link
+                            className="btn btn-outline-primary"
+                            role="button"
+                            to=
+                                {{
+                                pathname: '/devices',
+                                state: { regionId: region.regionId }
+                                }}
 
-                        >
-                        Пристрої ділянки
-                        </Link>
+                            >Переглянути пристрої</Link>
                         </td>
                     </tr>
 
 
                     )}
                 </tbody>
-            </table></>
+            </table>
+            
+            </>
             );
     }
 
