@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Simply_Watered.Data;
 
 namespace Simply_Watered.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211124083002_normalizedTime")]
+    partial class normalizedTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -397,21 +399,6 @@ namespace Simply_Watered.Migrations
                     b.ToTable("Devices");
                 });
 
-            modelBuilder.Entity("Simply_Watered.Models.DevicesSchedules", b =>
-                {
-                    b.Property<long>("DeviceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ScheduleId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("DeviceId", "ScheduleId");
-
-                    b.HasIndex("ScheduleId");
-
-                    b.ToTable("DevicesSchedules");
-                });
-
             modelBuilder.Entity("Simply_Watered.Models.IrrigationModes", b =>
                 {
                     b.Property<long>("IrrigModeId")
@@ -436,18 +423,23 @@ namespace Simply_Watered.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<long>("DeviceId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("IrrigScheduleName")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasMaxLength(450);
 
-                    b.Property<DateTime>("ScheduleEndDate")
+                    b.Property<DateTime?>("ScheduleEndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ScheduleStartDate")
+                    b.Property<DateTime>("SheduleStartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("IrrigScheduleId");
+
+                    b.HasIndex("DeviceId");
 
                     b.ToTable("IrrigationSchedules");
                 });
@@ -610,19 +602,12 @@ namespace Simply_Watered.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
                 });
 
-            modelBuilder.Entity("Simply_Watered.Models.DevicesSchedules", b =>
+            modelBuilder.Entity("Simply_Watered.Models.IrrigationSchedules", b =>
                 {
                     b.HasOne("Simply_Watered.Models.Devices", "Device")
-                        .WithMany("DevicesSchedules")
+                        .WithMany("IrrigationSchedules")
                         .HasForeignKey("DeviceId")
-                        .HasConstraintName("FK_DevicesSchedules_Devices")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Simply_Watered.Models.IrrigationSchedules", "Schedule")
-                        .WithMany("DevicesSchedules")
-                        .HasForeignKey("ScheduleId")
-                        .HasConstraintName("FK_DevicesSchedules_IrrigationSchedules")
+                        .HasConstraintName("FK_IrrigationSchedules_Devices")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

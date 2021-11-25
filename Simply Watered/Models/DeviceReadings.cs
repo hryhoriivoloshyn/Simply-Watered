@@ -11,6 +11,8 @@ namespace Simply_Watered.Models
     {
         public long ReadingId { get; set; }
         public DateTime ReadingDateTime { get; set; }
+        public string NormalizedDate { get; set; }
+        public string NormalizedTime { get; set; }
         public double? ReadingTemp { get; set; }
         public double? ReadingHumidity { get; set; }
         public long DeviceId { get; set; }

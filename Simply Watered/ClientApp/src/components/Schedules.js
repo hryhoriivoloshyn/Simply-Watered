@@ -1,17 +1,19 @@
-import { useLocation } from 'react-router-dom'
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import authService from './api-authorization/AuthorizeService'
 
-export class RegionList extends Component{
+
+export class ScheduleList extends Component{
  
     constructor(props){
         super(props)
         this.state={
-            regions: [],
+            schedules: [],
             regionGroup: {GroupName:"",
                           GroupDescription: ""
                          },
+            minStartDate: "",    
+            minEndDate: "",         
             groupId: this.props.location.state.groupId
         }
     }
@@ -20,15 +22,15 @@ export class RegionList extends Component{
         this.props.history.goBack();
     }
 
-    onRemoveRegion= async(region)=>{
+    onRemoveSchedule= async(schedule)=>{
 
         console.log("Проверка группы для удаления");
-        let deletemodel={id:region.regionId};
-    if (region) {
+        let deletemodel={id:schedule.scheduleId};
+    if (schedule) {
         console.log("Удаление");
         let token = await authService.getAccessToken();
         console.log(token);
-        let response = await fetch('regions/delete', {
+        let response = await fetch('schedules/delete', {
             method: "POST",
             headers: !token ? {
                 'Content-Type': 'application/json'
@@ -49,12 +51,12 @@ export class RegionList extends Component{
 
     render(){
         //const state= this.props.location.state;
-        let regions=this.state.regions;
+        let schedules=this.state.schedules;
         let groupName=this.state.regionGroup.groupName;
         return(
             <>
             
-            <h2 className="text-center">Ділянки групи "{groupName}"</h2>
+            <h2 className="text-center">Розклад зрошення ділянок групи "{groupName}"</h2>
             <hr />
 
             <Link
@@ -62,10 +64,14 @@ export class RegionList extends Component{
                 role="button"
                 to=
                 {{
-                pathname: '/regions-add',
-                state: { groupId: this.state.groupId }
+                pathname: '/schedules-add',
+                state: {
+                     groupId: this.state.groupId,
+                     minStartDate: this.state.minStartDate,
+                     minEndDate: this.state.minEndDate
+                    }
                 }}
-                >Додати ділянку</Link>
+                >Додати розклад</Link>
 
             <button className="btn btn-secondary" onClick={this.goBack}>Повернутися</button>
 
@@ -73,16 +79,18 @@ export class RegionList extends Component{
                 <thead>
                     <tr>
                         <th>Назва</th>
-                        <th>Опис</th>
+                        <th>Дата початку</th>
+                        <th>Дата завершення</th>
                         <th colSpan="2">Дії</th>
                     </tr>
                 </thead>
                 <tbody>
 
-                    {regions.map(region => <tr key={region.regionId}>
-                        <td>{region.regionName}</td>
-                        <td>{region.regionDescription}</td>
-                        <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveRegion(region); } }>Видалити</button></td>
+                    {schedules.map(schedule => <tr key={schedule.scheduleId}>
+                        <td>{schedule.irrigScheduleName}</td>
+                        <td>{schedule.scheduleStartDate.substr(0,10)}</td>
+                        <td>{schedule.scheduleEndDate.substr(0,10)}</td>
+                        <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveSchedule(schedule); } }>Видалити</button></td>
                         <td>
                         <Link
                             className="btn btn-outline-primary"
@@ -90,7 +98,7 @@ export class RegionList extends Component{
                             to=
                                 {{
                                 pathname: '/devices',
-                                state: { regionId: region.regionId }
+                                state: { scheduleId: schedule.scheduleId }
                                 }}
 
                             >Переглянути пристрої</Link>
@@ -110,7 +118,7 @@ export class RegionList extends Component{
         const token = await authService.getAccessToken();
         let groupIdModel={id:this.state.groupId}
         console.log(token);
-        const response = await fetch('regions/load', {
+        const response = await fetch('schedules/load', {
             method: "POST",
             headers: !token ? { 
                 'Content-Type': 'application/json'
@@ -123,6 +131,6 @@ export class RegionList extends Component{
         console.log(response);
         const data = await response.json();
         console.log(data);
-        this.setState({ regions: data.regions, regionGroup:data.regionGroup, loading: false });
+        this.setState({ schedules: data.schedules, regionGroup:data.regionGroup, minStartDate:data.minStartDate, minEndDate: data.minEndDate, loading: false });
     }
 }
