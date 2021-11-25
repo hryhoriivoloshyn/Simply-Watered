@@ -37,11 +37,12 @@ namespace Simply_Watered.Controllers
             public int id { get; set; }
         }
         [HttpPost("load")]
-        public async Task<JsonResult> Load([FromBody] RegionIdModel groupIdModel)
+        public async Task<JsonResult> Load([FromBody] RegionIdModel regionIdModel)
         {
-            var regionId = groupIdModel.id;
-            if (groupIdModel != null)
+           
+            if (regionIdModel != null)
             {
+                var regionId = regionIdModel.id;
                 IEnumerable<Devices> devices = _context.Devices.Where(r => r.RegionId == regionId).ToArray();
                 foreach (var device in devices)
                 {

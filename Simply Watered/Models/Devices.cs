@@ -12,7 +12,7 @@ namespace Simply_Watered.Models
         public Devices()
         {
             DeviceReadings = new HashSet<DeviceReadings>();
-            IrrigationSchedules = new HashSet<IrrigationSchedules>();
+            DevicesSchedules = new HashSet<DevicesSchedules>();
         }
 
         public long DeviceId { get; set; }
@@ -29,6 +29,8 @@ namespace Simply_Watered.Models
 
         public virtual DeviceTypes DeviceType { get; set; }
         public virtual ICollection<DeviceReadings> DeviceReadings { get; set; }
-        public virtual ICollection<IrrigationSchedules> IrrigationSchedules { get; set; }
+        //public virtual ICollection<IrrigationSchedules> IrrigationSchedules { get; set; }
+
+        public virtual ICollection<DevicesSchedules> DevicesSchedules { get; set; }
     }
 }

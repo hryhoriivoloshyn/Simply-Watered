@@ -24,9 +24,11 @@ namespace Simply_Watered.Data
         public virtual DbSet<DeviceTypes> DeviceTypes { get; set; }
         public virtual DbSet<IrrigationModes> IrrigationModes { get; set; }
         public virtual DbSet<IrrigationSchedules> IrrigationSchedules { get; set; }
+        public virtual DbSet<ScheduleTimespans> ScheduleTimespans { get; set; }
+        public virtual DbSet<DevicesSchedules> DevicesSchedules { get; set; }
         public virtual DbSet<RegionGroups> RegionGroups { get; set; }
         public virtual DbSet<Regions> Regions { get; set; }
-        public virtual DbSet<ScheduleTimespans> ScheduleTimespans { get; set; }
+        
        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -82,6 +84,8 @@ namespace Simply_Watered.Data
                     .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_Devices_DeviceTypes");
 
+                
+
             });
 
             modelBuilder.Entity<DeviceTypes>(entity =>
@@ -114,12 +118,28 @@ namespace Simply_Watered.Data
                     .IsRequired()
                     .HasMaxLength(450);
 
-                entity.HasOne(d => d.Device)
-                    .WithMany(p => p.IrrigationSchedules)
-                    .HasForeignKey(d => d.DeviceId)
-                    .HasConstraintName("FK_IrrigationSchedules_Devices");
+                //entity.HasOne(d => d.Device)
+                //    .WithMany(p => p.IrrigationSchedules)
+                //    .HasForeignKey(d => d.DeviceId)
+                //    .HasConstraintName("FK_IrrigationSchedules_Devices");
             });
 
+            modelBuilder.Entity<DevicesSchedules>(entity =>
+                {
+                    entity.HasKey(e => new {e.DeviceId, e.ScheduleId});
+
+                    entity.HasOne(e => e.Device)
+                        .WithMany(d => d.DevicesSchedules)
+                        .HasForeignKey(e => e.DeviceId)
+                        .HasConstraintName("FK_DevicesSchedules_Devices");
+
+                    entity.HasOne(e => e.Schedule)
+                        .WithMany(s => s.DevicesSchedules)
+                        .HasForeignKey(e => e.ScheduleId)
+                        .HasConstraintName("FK_DevicesSchedules_IrrigationSchedules");
+
+                }
+            );
             modelBuilder.Entity<RegionGroups>(entity =>
             {
                 entity.HasKey(e => e.RegionGroupId);

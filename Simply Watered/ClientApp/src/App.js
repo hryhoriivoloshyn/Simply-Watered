@@ -15,7 +15,8 @@ import {RegionList} from './components/Regions';
 import {RegionAdding} from './components/RegionsAdding';
 import { DeviceList } from './components/Devices';
 import {ReadingList} from './components/Readings';
-
+import { ScheduleList } from './components/Schedules';
+import { ScheduleAdding } from './components/SchedulesAdding';
 import './custom.css'
 
 export default class App extends Component {
@@ -32,6 +33,9 @@ export default class App extends Component {
         <AuthorizeRoute path='/regions-add' component={RegionAdding} />
         <AuthorizeRoute path='/devices' component={DeviceList} />
         <AuthorizeRoute path='/readings' component={ReadingList} />
+        <AuthorizeRoute path='/schedules' component={ScheduleList}/>
+        <AuthorizeRoute path='/schedules-add' component={ScheduleAdding}/>
+
         <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
       </Layout>
     );

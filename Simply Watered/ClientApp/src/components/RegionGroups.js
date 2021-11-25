@@ -59,7 +59,7 @@ export class GroupList extends Component {
             <hr />
 
             <Link to="/region-groups-add" className="btn btn-primary mx-3" role="button" >Додати групу</Link>
-
+            
         
             <table className='table table-striped text-center mt-3' aria-labelledby="tabelLabel">
                 <thead>
@@ -86,6 +86,19 @@ export class GroupList extends Component {
 
                         >
                          Переглянути ділянки
+                        </Link>
+                        </td>
+                        <td><Link
+                        className="btn btn-outline-primary"
+                        role="button"
+                        to=
+                        {{
+                        pathname: '/schedules',
+                        state: { groupId: regiongroup.regionGroupId }
+                        }}
+
+                        >
+                         Задати розклад зрошення
                         </Link>
                         </td>
                     </tr>
