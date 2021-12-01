@@ -15,7 +15,7 @@ export class DeviceList extends Component{
             region: {RegionName:"",
                           RegionDescription: ""
                          },
-            regionId: this.props.location.state.regionId
+            path: this.props.location.pathname
         }
     }
 
@@ -26,19 +26,19 @@ export class DeviceList extends Component{
     onRemoveDevice= async(device)=>{
 
 
-        let deletemodel={id:device.deviceId};
+       
     if (device) {
 
         let token = await authService.getAccessToken();
-        let response = await fetch('devices/delete', {
-            method: "POST",
+        let response = await fetch(`api${this.state.path}/${device.deviceId}`, {
+            method: "DELETE",
             headers: !token ? {
                 'Content-Type': 'application/json'
             } : {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(deletemodel)
+           
         }).then(async ()=>{
             await this.loadData();
         });
@@ -59,7 +59,7 @@ export class DeviceList extends Component{
             <h2 className="text-center">Пристрої ділянки "{regionName}"</h2>
             <hr />
 
-            <DeviceAdding regionId={this.state.regionId} loadData={this.loadData.bind(this)} goBack={this.goBack}></DeviceAdding>
+            <DeviceAdding path={this.state.path} loadData={this.loadData.bind(this)} goBack={this.goBack}></DeviceAdding>
            
             <table className='table table-striped text-center mt-3' aria-labelledby="tabelLabel">
                 <thead>
@@ -80,7 +80,7 @@ export class DeviceList extends Component{
                         <td><Link className="btn btn-outline-primary" role="button"
                         to=
                         {{
-                        pathname: '/readings',
+                        pathname: `${this.state.path}/${device.deviceId}/readings`,
                         state: { deviceId: device.deviceId }
                         }}
 
@@ -101,17 +101,16 @@ export class DeviceList extends Component{
 
     async loadData() {
         const token = await authService.getAccessToken();
-        let regionIdModel={id:this.state.regionId}
         
-        const response = await fetch('devices/load', {
-            method: "POST",
+        
+        const response = await fetch(`api${this.state.path}`, {
+            method: "GET",
             headers: !token ? { 
                 'Content-Type': 'application/json'
              } : {
                   'Content-Type': 'application/json',
                    'Authorization': `Bearer ${token}` 
                 },
-                body: JSON.stringify(regionIdModel)
         });
         const data = await response.json();
         this.setState({ devices: data.devices, region:data.region, loading: false });

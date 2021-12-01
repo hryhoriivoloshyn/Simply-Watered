@@ -1,4 +1,5 @@
 import { useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import authService from './api-authorization/AuthorizeService'
@@ -7,12 +8,15 @@ export class RegionList extends Component{
  
     constructor(props){
         super(props)
+        
+    
         this.state={
             regions: [],
-            regionGroup: {GroupName:"",
-                          GroupDescription: ""
+            regionGroup: {groupName:" ",
+                          groupDescription: " "
                          },
-            groupId: this.props.location.state.groupId
+            pathname: this.props.location.pathname,
+            // groupId: this.state.pathname.substring(this.state.pathname.lastIndexOf('/')+1)
         }
     }
 
@@ -23,20 +27,19 @@ export class RegionList extends Component{
     onRemoveRegion= async(region)=>{
 
         console.log("Проверка группы для удаления");
-        let deletemodel={id:region.regionId};
+        let regionId= region.regionId;
     if (region) {
         console.log("Удаление");
         let token = await authService.getAccessToken();
         console.log(token);
-        let response = await fetch('regions/delete', {
-            method: "POST",
+        let response = await fetch(`api${this.state.pathname}/${regionId}`, {
+            method: "DELETE",
             headers: !token ? {
                 'Content-Type': 'application/json'
             } : {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(deletemodel)
         }).then(async ()=>{
             await this.loadData();
         });
@@ -48,12 +51,13 @@ export class RegionList extends Component{
     }
 
     render(){
-        //const state= this.props.location.state;
+        
+   
         let regions=this.state.regions;
         let groupName=this.state.regionGroup.groupName;
         return(
             <>
-            
+
             <h2 className="text-center">Ділянки групи "{groupName}"</h2>
             <hr />
 
@@ -62,8 +66,8 @@ export class RegionList extends Component{
                 role="button"
                 to=
                 {{
-                pathname: '/regions-add',
-                state: { groupId: this.state.groupId }
+                pathname: `${this.state.pathname}/add`,
+               
                 }}
                 >Додати ділянку</Link>
 
@@ -89,8 +93,8 @@ export class RegionList extends Component{
                             role="button"
                             to=
                                 {{
-                                pathname: '/devices',
-                                state: { regionId: region.regionId }
+                                pathname: `${this.state.pathname}/${region.regionId}/devices`,
+                               
                                 }}
 
                             >Переглянути пристрої</Link>
@@ -108,17 +112,17 @@ export class RegionList extends Component{
 
     async loadData() {
         const token = await authService.getAccessToken();
-        let groupIdModel={id:this.state.groupId}
+     
+        
         console.log(token);
-        const response = await fetch('regions/load', {
-            method: "POST",
+        const response = await fetch(`api${this.state.pathname}`, {
+            method: "Get",
             headers: !token ? { 
                 'Content-Type': 'application/json'
              } : {
                   'Content-Type': 'application/json',
                    'Authorization': `Bearer ${token}` 
                 },
-                body: JSON.stringify(groupIdModel)
         });
         console.log(response);
         const data = await response.json();

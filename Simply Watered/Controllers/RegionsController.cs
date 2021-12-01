@@ -16,8 +16,8 @@ namespace Simply_Watered.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
-    public class RegionsController : Controller 
+    [Route("api/regiongroups/{groupId:long}/[controller]")]
+    public class RegionsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -31,17 +31,12 @@ namespace Simply_Watered.Controllers
 
         }
 
-        public class GroupIdModel
-        {
-            public int id { get; set; }
-        }
+       
 
-        [HttpPost("load")]
-        public async Task<JsonResult> LoadRegions([FromBody] GroupIdModel groupIdModel)
+        [HttpGet]
+        public async Task<RegionsViewModel> Get(long groupId)
         {
-            var groupId = groupIdModel.id;
-            if (groupId != null)
-            {
+           
                 IEnumerable<Regions> regions = _context.Regions.Where(r => r.RegionGroupId == groupId).ToArray();
                 RegionGroups regionGroup = await _context.RegionGroups.Where(g => g.RegionGroupId == groupId).FirstOrDefaultAsync();
                 RegionsViewModel viewModel = new RegionsViewModel()
@@ -49,36 +44,28 @@ namespace Simply_Watered.Controllers
                     Regions = regions,
                     RegionGroup = regionGroup
                 };
-                JsonResult response = Json(viewModel);
-                return response;
-            }
 
-            return null;
+                return viewModel;
+                
         }
 
-        public class DeleteRegionModel
+
+
+       
+        [HttpDelete("{id:long}")]
+        public async Task<IActionResult> Delete(long groupId, long id)
         {
             
-            public long id { get; set; }
-        }
-        [HttpPost("delete")]
-        public async Task<IActionResult> Delete([FromBody] DeleteRegionModel regionModel)
-        {
             
-            var regionId = regionModel.id;
-            if (regionModel != null)
-            {
-                Regions region = _context.Regions.FirstOrDefault(r => r.RegionId == regionId);
+                Regions region = _context.Regions.FirstOrDefault(r => r.RegionId == id);
                 if (region != null)
                 {
                     _context.Regions.Remove(region);
                     await _context.SaveChangesAsync();
-                    return Ok(regionModel);
+                    return Ok(region);
                 }
 
-            }
-
-            return NotFound();
+                return NotFound();
 
         }
 
@@ -86,10 +73,10 @@ namespace Simply_Watered.Controllers
         {
             public string RegionName { get; set; }
             public string RegionDescription { get; set; }
-            public long GroupId { get; set; }
+            //public long GroupId { get; set; }
         }
-        [HttpPost("add")]
-        public async Task<IActionResult> Add([FromBody] InputModel inputModel)
+        [HttpPost]
+        public async Task<IActionResult> Post(long groupId, [FromBody] InputModel inputModel)
         {
             if (inputModel != null)
             {
@@ -98,14 +85,14 @@ namespace Simply_Watered.Controllers
                 {
                     RegionName = inputModel.RegionName,
                     RegionDescription = inputModel.RegionDescription,
-                    RegionGroupId = inputModel.GroupId
+                    RegionGroupId = groupId
 
                 };
                 _context.Regions.Add(newRegion);
                 await _context.SaveChangesAsync();
                 return Ok(inputModel);
             }
-            return NotFound();
+            return BadRequest();
         }
 
 

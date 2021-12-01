@@ -17,8 +17,8 @@ namespace Simply_Watered.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
-    public class RegionGroupsAddingController : Controller
+    [Route("api/[controller]")]
+    public class RegionGroupsAddingController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;

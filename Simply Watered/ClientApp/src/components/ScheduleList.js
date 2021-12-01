@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import authService from './api-authorization/AuthorizeService'
-
+import { GroupSettings } from './GroupSettings';
 
 export class ScheduleList extends Component{
  
@@ -12,9 +12,10 @@ export class ScheduleList extends Component{
             regionGroup: {GroupName:"",
                           GroupDescription: ""
                          },
+            irrigationModes: [],
             minStartDate: "",    
             minEndDate: "",         
-            groupId: this.props.location.state.groupId
+            path: this.props.location.pathname
         }
     }
 
@@ -30,8 +31,8 @@ export class ScheduleList extends Component{
         console.log("Удаление");
         let token = await authService.getAccessToken();
         console.log(token);
-        let response = await fetch('schedules/delete', {
-            method: "POST",
+        let response = await fetch(`api${this.state.path}`, {
+            method: "DELETE",
             headers: !token ? {
                 'Content-Type': 'application/json'
             } : {
@@ -64,9 +65,8 @@ export class ScheduleList extends Component{
                 role="button"
                 to=
                 {{
-                pathname: '/schedules-add',
+                pathname: `${this.state.path}/add`,
                 state: {
-                     groupId: this.state.groupId,
                      minStartDate: this.state.minStartDate,
                      minEndDate: this.state.minEndDate
                     }
@@ -75,13 +75,15 @@ export class ScheduleList extends Component{
 
             <button className="btn btn-secondary" onClick={this.goBack}>Повернутися</button>
 
+            <GroupSettings groupId={this.state.groupId} irrigationModes={this.state.irrigationModes} loadData={this.loadData.bind(this)} ></GroupSettings>
+
             <table className='table table-striped text-center mt-3' aria-labelledby="tabelLabel">
                 <thead>
                     <tr>
                         <th>Назва</th>
                         <th>Дата початку</th>
                         <th>Дата завершення</th>
-                        <th colSpan="2">Дії</th>
+                        <th>Дії</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,16 +94,6 @@ export class ScheduleList extends Component{
                         <td>{schedule.scheduleEndDate.substr(0,10)}</td>
                         <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveSchedule(schedule); } }>Видалити</button></td>
                         <td>
-                        <Link
-                            className="btn btn-outline-primary"
-                            role="button"
-                            to=
-                                {{
-                                pathname: '/devices',
-                                state: { scheduleId: schedule.scheduleId }
-                                }}
-
-                            >Переглянути пристрої</Link>
                         </td>
                     </tr>
 
@@ -116,21 +108,27 @@ export class ScheduleList extends Component{
 
     async loadData() {
         const token = await authService.getAccessToken();
-        let groupIdModel={id:this.state.groupId}
         console.log(token);
-        const response = await fetch('schedules/load', {
-            method: "POST",
+
+        const response = await fetch(`api${this.state.path}`, {
+            method: "GET",
             headers: !token ? { 
                 'Content-Type': 'application/json'
              } : {
                   'Content-Type': 'application/json',
                    'Authorization': `Bearer ${token}` 
                 },
-                body: JSON.stringify(groupIdModel)
+
         });
+
         console.log(response);
         const data = await response.json();
         console.log(data);
-        this.setState({ schedules: data.schedules, regionGroup:data.regionGroup, minStartDate:data.minStartDate, minEndDate: data.minEndDate, loading: false });
+        this.setState({ schedules: data.schedules,
+             regionGroup:data.regionGroup,
+             irrigationModes: data.irrigationModes,
+             minStartDate:data.minStartDate,
+             minEndDate: data.minEndDate,
+             loading: false });
     }
 }

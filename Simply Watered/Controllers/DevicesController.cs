@@ -18,8 +18,8 @@ namespace Simply_Watered.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
-    public class DevicesController : Controller
+    [Route("api/regiongroups/{groupId:long}/regions/{regionId:long}/[controller]")]
+    public class DevicesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -36,13 +36,11 @@ namespace Simply_Watered.Controllers
         {
             public int id { get; set; }
         }
-        [HttpPost("load")]
-        public async Task<JsonResult> Load([FromBody] RegionIdModel regionIdModel)
+        [HttpGet]
+        public async Task<DevicesViewModel> Get(long regionId)
         {
            
-            if (regionIdModel != null)
-            {
-                var regionId = regionIdModel.id;
+                
                 IEnumerable<Devices> devices = _context.Devices.Where(r => r.RegionId == regionId).ToArray();
                 foreach (var device in devices)
                 {
@@ -55,55 +53,49 @@ namespace Simply_Watered.Controllers
                     Devices = devices,
                     Region=region
                 };
-                JsonResult response = Json(viewModel);
-                return response;
-            }
+               
+                return viewModel;
+            
 
-            return null;
+           
         }
 
-        public class DeleteDeviceModel
-        {
-
-            public long id { get; set; }
-        }
-        [HttpPost("delete")]
-        public async Task<IActionResult> Delete([FromBody] DeleteDeviceModel deviceModel)
+       
+        [HttpDelete("{id:long}")]
+        public async Task<IActionResult> Delete(long id)
         {
 
             
-            if (deviceModel != null)
-            {
-                var deviceId = deviceModel.id;
-                Devices device = _context.Devices.FirstOrDefault(r => r.DeviceId == deviceId);
+          
+               
+                Devices device = _context.Devices.FirstOrDefault(r => r.DeviceId == id);
                 if (device != null)
                 {
                     device.RegionId = null;
                     _context.Devices.Update(device);
                     await _context.SaveChangesAsync();
-                    return Ok(deviceModel);
+                    return Ok(id);
                 }
 
-            }
+                return BadRequest();
 
-            return NotFound();
+
 
         }
 
         public class InputModel
         {
-         
-            public long regionId { get; set; }
+            
             public string SerialNumber { get; set; }
         }
-        [HttpPost("add")]
-        public async Task<IActionResult> Add([FromBody] InputModel inputModel)
+        [HttpPut]
+        public async Task<IActionResult> AddDevice(long regionId, [FromBody] InputModel inputModel)
         {
             if (inputModel != null)
             {
                 
                 var serialNumber = inputModel.SerialNumber;
-                var regionId = inputModel.regionId;
+             
                 Devices device = _context.Devices.FirstOrDefault(r => r.SerialNumber == serialNumber);
                 
                 if (device != null)

@@ -5,7 +5,7 @@ export class DeviceAdding extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            regionId: this.props.regionId,
+            path: this.props.path,
             errorServerMessage: '',
             fields: {},
             errors: {}
@@ -50,7 +50,6 @@ export class DeviceAdding extends React.Component {
 
     onCreateDevice = async () => {
         let deviceModel = {
-            RegionId: this.state.regionId,
             SerialNumber: this.state.fields["serialNumber"]
         };
 
@@ -58,8 +57,8 @@ export class DeviceAdding extends React.Component {
 
         let token = await authService.getAccessToken();
 
-        await fetch('devices/add', {
-            method: "POST",
+        await fetch(`api${this.state.path}`, {
+            method: "PUT",
             headers: !token ? {
                 'Content-Type': 'application/json'
             } : {

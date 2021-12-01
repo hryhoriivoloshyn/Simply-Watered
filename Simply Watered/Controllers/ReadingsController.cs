@@ -15,8 +15,8 @@ namespace Simply_Watered.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
-    public class ReadingsController : Controller
+    [Route("api/regiongroups/{groupId:long}/regions/{regionId:long}/devices/{deviceId:long}/[controller]")]
+    public class ReadingsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -30,17 +30,13 @@ namespace Simply_Watered.Controllers
 
         }
 
-        public class DeviceIdModel
-        {
-            public int id { get; set; }
-        }
-        [HttpPost("load")]
-        public async Task<JsonResult> Load([FromBody] DeviceIdModel deviceIdModel)
+     
+        [HttpGet]
+        public async Task<ReadingsViewModel> Load(long deviceId)
         {
            
-            if (deviceIdModel != null)
-            {
-                var deviceId = deviceIdModel.id;
+            
+                
                 IEnumerable<DeviceReadings> deviceReadings =  _context.DeviceReadings.Where(r => r.DeviceId == deviceId).ToArray();
 
                 Devices device = _context.Devices.FirstOrDefault(d => d.DeviceId == deviceId);
@@ -51,11 +47,11 @@ namespace Simply_Watered.Controllers
                     Readings = deviceReadings,
                     Device = device
                 };
-                JsonResult response = Json(viewModel);
-                return response;
-            }
+                
+                return viewModel;
+            
 
-            return null;
+         
         }
 
     }
