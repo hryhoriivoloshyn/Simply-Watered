@@ -7,11 +7,14 @@ import { Link } from 'react-router-dom'
 export class RegionAdding extends React.Component {
     constructor(props) {
         super(props);
+        
+        const pathname=this.props.location.pathname;
         this.state = {
             redirect: null,
-            groupId: this.props.location.state.groupId,
+            // groupId: this.props.location.state.groupId,
             fields: {},
-            errors: {}
+            errors: {},
+            resourcepath: pathname.substring(0,pathname.lastIndexOf('/'))
         };
     }
 
@@ -56,13 +59,12 @@ export class RegionAdding extends React.Component {
         let regionModel = {
             RegionName: this.state.fields["regionName"],
             RegionDescription: this.state.fields["description"],
-            GroupId: this.state.groupId
         };
         console.log(regionModel);
         console.log("Добавление");
         let token = await authService.getAccessToken();
         console.log(token);
-        await fetch('regions/add', {
+        await fetch(`api${this.state.resourcepath}`, {
             method: "POST",
             headers: !token ? {
                 'Content-Type': 'application/json'
@@ -71,7 +73,7 @@ export class RegionAdding extends React.Component {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(regionModel)
-        }).then(() => { this.setState({ redirect: "/regions" }) });
+        }).then(() => { this.setState({ redirect: this.state.resourcepath }) });
 
 
     }

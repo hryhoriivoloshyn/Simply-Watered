@@ -7,9 +7,11 @@ import { Link } from 'react-router-dom'
 export class ScheduleAdding extends React.Component {
     constructor(props) {
         super(props);
+        const pathname=this.props.location.pathname;
+
         this.state = {
             redirect: null,
-            groupId: this.props.location.state.groupId,
+            resourcepath: pathname.substring(0,pathname.lastIndexOf('/')),
 
             minStartDate: this.props.location.state.minStartDate,
             minEndDate: this.props.location.state.minEndDate,
@@ -119,13 +121,13 @@ export class ScheduleAdding extends React.Component {
                 Start: this.state.fields["timespanStart"],
                 Finish: this.state.fields["timespanEnd"],
             },
-            GroupId: this.state.groupId
+           
         };
         console.log(scheduleModel);
         console.log("Добавление");
         let token = await authService.getAccessToken();
         console.log(token);
-        await fetch('schedules/add', {
+        await fetch(`api${this.state.resourcepath}`, {
             method: "POST",
             headers: !token ? {
                 'Content-Type': 'application/json'
@@ -134,7 +136,7 @@ export class ScheduleAdding extends React.Component {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(scheduleModel)
-        }).then(() => { this.setState({ redirect: "/schedules" }) });
+        }).then(() => { this.setState({ redirect: this.state.resourcepath }) });
 
 
     }

@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.Extensions.Logging;
 using Simply_Watered.Data;
 using Simply_Watered.Models;
@@ -16,8 +16,8 @@ namespace Simply_Watered.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
-    public class SchedulesController : Controller
+    [Route("api/regiongroups/{groupId:long}/[controller]")]
+    public class SchedulesController : ControllerBase
     {
 
         private readonly ApplicationDbContext _context;
@@ -31,6 +31,8 @@ namespace Simply_Watered.Controllers
             _userManager = userManager;
 
         }
+
+       
 
         private IEnumerable<IrrigationSchedules> GetSchedulesByGroupId(long groupId)
         {
@@ -56,17 +58,13 @@ namespace Simply_Watered.Controllers
             return schedules;
         }
 
-        public class GroupIdModel
-        {
-            public long id { get; set; }
-        }
-        [HttpPost("load")]
-        public async Task<JsonResult> Load([FromBody] GroupIdModel groupIdModel)
+    
+        [HttpGet]
+        public async Task<SchedulesViewModel> Get(long groupId)
         {
 
-            if (groupIdModel != null)
-            {
-                var groupId = groupIdModel.id;
+         
+              
 
                 RegionGroups regionGroup = _context.RegionGroups.FirstOrDefault(g => g.RegionGroupId == groupId);
 
@@ -88,20 +86,20 @@ namespace Simply_Watered.Controllers
                     minStartDate = LastEndDate.AddDays(1);
                 }
 
-                 
+                IEnumerable<IrrigationModes> irrigationModes = _context.IrrigationModes.ToList(); 
+
                 SchedulesViewModel viewModel = new SchedulesViewModel()
                 {
                     Schedules = schedules,
                     RegionGroup = regionGroup,
+                    IrrigationModes = irrigationModes,
                     MinStartDate = minStartDate.ToString("yyyy-MM-dd"),
                     MinEndDate=minStartDate.AddDays(1).ToString("yyyy-MM-dd")
                 };
 
-                JsonResult response = Json(viewModel);
-                return response;
-            }
-
-            return null;
+        
+                return viewModel;
+            
         }
 
 
@@ -114,7 +112,7 @@ namespace Simply_Watered.Controllers
             public string ScheduleEndDate { get; set; }
             public TimespanModel Timespan { get; set; }
 
-            public long GroupId { get; set; }
+            
 
             public class TimespanModel
             {
@@ -136,8 +134,8 @@ namespace Simply_Watered.Controllers
 
             return devices;
         }
-        [HttpPost("add")]
-        public async Task<IActionResult> Add([FromBody] AddModel addModel)
+        [HttpPost]
+        public async Task<IActionResult> Post(long groupId, [FromBody] AddModel addModel)
         {
             if (addModel != null)
             {
@@ -145,6 +143,7 @@ namespace Simply_Watered.Controllers
                 DateTime endDate = DateTime.Parse(addModel.ScheduleEndDate);
                 TimeSpan startTime = TimeSpan.Parse(addModel.Timespan.Start);
                 TimeSpan endTime = TimeSpan.Parse(addModel.Timespan.Finish);
+
                 IrrigationSchedules schedule = new IrrigationSchedules()
                 {
                     IrrigScheduleName = addModel.ScheduleName,
@@ -164,8 +163,8 @@ namespace Simply_Watered.Controllers
 
                 _context.ScheduleTimespans.Add(timespan);
 
-                IEnumerable<Devices> devices = GetDevicesByGroupId(addModel.GroupId);
-                DevicesSchedules deviceSchedule=new DevicesSchedules();
+                IEnumerable<Devices> devices = GetDevicesByGroupId(groupId);
+
                 foreach (var device in devices)
                 {
                     _context.DevicesSchedules.Add(new DevicesSchedules()

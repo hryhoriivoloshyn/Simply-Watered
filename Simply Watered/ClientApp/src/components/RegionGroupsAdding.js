@@ -58,7 +58,7 @@ export class GroupAdding extends React.Component {
             console.log("Добавление");
             let token = await authService.getAccessToken();
             console.log(token);
-            let response = await fetch('regiongroupsadding/add', {
+            let response = await fetch('api/regiongroups', {
                 method: "POST",
                 headers: !token ? {
                     'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ export class GroupAdding extends React.Component {
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(groupModel)
-            }).then(()=>{this.setState({redirect:"/region-groups"})});
+            }).then(()=>{this.setState({redirect:"/regiongroups"})});
             
         
         }

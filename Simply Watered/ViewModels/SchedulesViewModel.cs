@@ -10,6 +10,7 @@ namespace Simply_Watered.ViewModels
     {
         public IEnumerable<IrrigationSchedules> Schedules { get; set; }
         public RegionGroups RegionGroup { get; set; }
+        public IEnumerable<IrrigationModes> IrrigationModes { get; set; }
         public string MinStartDate { get; set; }
         public string MinEndDate { get; set; }
     }

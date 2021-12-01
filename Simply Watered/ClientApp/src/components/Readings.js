@@ -15,7 +15,7 @@ export class ReadingList extends Component{
                         deviceName: ""
                     }
                     },
-            deviceId: this.props.location.state.deviceId
+            pathname: this.props.location.pathname
         }
     }
 
@@ -32,7 +32,7 @@ export class ReadingList extends Component{
         let token = await authService.getAccessToken();
         console.log(token);
         let response = await fetch('readings/delete', {
-            method: "POST",
+            method: "GET",
             headers: !token ? {
                 'Content-Type': 'application/json'
             } : {
@@ -94,17 +94,17 @@ export class ReadingList extends Component{
 
     async loadData() {
         const token = await authService.getAccessToken();
-        let deviceIdModel={id:this.state.deviceId}
+        
         console.log(token);
-        const response = await fetch('readings/load', {
-            method: "POST",
+        const response = await fetch(`api${this.state.pathname}`, {
+            method: "GET",
             headers: !token ? { 
                 'Content-Type': 'application/json'
              } : {
                   'Content-Type': 'application/json',
                    'Authorization': `Bearer ${token}` 
                 },
-                body: JSON.stringify(deviceIdModel)
+              
         });
         console.log(response);
         const data = await response.json();

@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import authService from './api-authorization/AuthorizeService'
-
+import {withRouter} from "react-router-dom"
 
 export class GroupList extends Component {
     static displayName = GroupList.name;
@@ -11,7 +11,8 @@ export class GroupList extends Component {
         this.state = {
             regiongroups: [],
             loading: true,
-            message: ''
+            message: '',
+            path: this.props.location.pathname
         }
     }
 
@@ -23,21 +24,21 @@ export class GroupList extends Component {
      onRemoveGroup= async(regiongroup)=>{
 
          console.log("Проверка группы для удаления");
-         let deletemodel={id:regiongroup.regionGroupId}
-        
+      
+        let groupId= regiongroup.regionGroupId;
         if (regiongroup) {
             console.log("Удаление");
             let token = await authService.getAccessToken();
             console.log(token);
-            let response = await fetch('regiongroups/delete', {
-                method: "POST",
+            let response = await fetch(`api${this.state.path}/${groupId}`, {
+                method: "DELETE",
                 headers: !token ? {
                     'Content-Type': 'application/json'
                 } : {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(deletemodel)
+                
             }).then(async ()=>{
                 await this.loadData();
             });
@@ -58,7 +59,7 @@ export class GroupList extends Component {
             <h2 className="text-center">Групи ділянок</h2>
             <hr />
 
-            <Link to="/region-groups-add" className="btn btn-primary mx-3" role="button" >Додати групу</Link>
+            <Link to="/regiongroups/add" className="btn btn-primary mx-3" role="button" >Додати групу</Link>
             
         
             <table className='table table-striped text-center mt-3' aria-labelledby="tabelLabel">
@@ -80,8 +81,7 @@ export class GroupList extends Component {
                         role="button"
                         to=
                         {{
-                        pathname: '/regions',
-                        state: { groupId: regiongroup.regionGroupId }
+                        pathname: `${this.state.path}/${regiongroup.regionGroupId}/regions`
                         }}
 
                         >
@@ -93,8 +93,7 @@ export class GroupList extends Component {
                         role="button"
                         to=
                         {{
-                        pathname: '/schedules',
-                        state: { groupId: regiongroup.regionGroupId }
+                        pathname: `${this.state.path}/${regiongroup.regionGroupId}/schedules`,
                         }}
 
                         >
@@ -114,9 +113,11 @@ export class GroupList extends Component {
     async loadData() {
         const token = await authService.getAccessToken();
         console.log(token);
-        const response = await fetch('regiongroups', {
+
+        const response = await fetch('api/regiongroups', {
             headers: !token ? { 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
         });
+        
         console.log(response);
         const data = await response.json();
         console.log(data);
