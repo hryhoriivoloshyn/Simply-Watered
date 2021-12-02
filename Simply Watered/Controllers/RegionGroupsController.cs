@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Simply_Watered.Data;
 using Simply_Watered.Models;
+using Simply_Watered.Services;
 using Simply_Watered.ViewModels;
 
 namespace Simply_Watered.Controllers
@@ -73,16 +74,41 @@ namespace Simply_Watered.Controllers
             return NotFound();
         }
 
-    
+        public class PutModel
+        {
+            public long ModeId { get; set; }
+            public int MinHumidity { get; set; }
+            public int MaxHumidity { get; set; }
+        }
+        [HttpPut("{id:long}")]
+        public async Task<IActionResult> UpdateGroupSettings(long id, [FromBody] PutModel inputModel)
+        {
+            IEnumerable<Devices> devices = DeviceManager.GetDevicesByGroupId(id, _context);
+            if (devices != null)
+            {
+                devices.Select(d =>
+                {
+                    d.IrrigModeId = inputModel.ModeId;
+                    d.MinimalHumidity = inputModel.MinHumidity;
+                    d.MaxHumidity = inputModel.MaxHumidity;
+                    return d;
+                }).ToList();
+                _context.Devices.UpdateRange(devices);
+                await _context.SaveChangesAsync();
+                return Ok(inputModel);
+            }
+            
+            return BadRequest();
+        }
 
         [HttpDelete("{Id:long}")]
         public async Task<IActionResult> Delete(long Id)
         {
             
-            var groupId = Id;
-            if (groupId != null)
-            {
-                RegionGroups group = _context.RegionGroups.FirstOrDefault(g => g.RegionGroupId == groupId);
+          
+            
+            
+                RegionGroups group = _context.RegionGroups.FirstOrDefault(g => g.RegionGroupId == Id);
                 if (group != null)
                 {
                     _context.RegionGroups.Remove(group);
@@ -90,9 +116,7 @@ namespace Simply_Watered.Controllers
                     return Ok(Id);
                 }
 
-            }
-
-            return NotFound();
+                return NotFound();
             
         }
 

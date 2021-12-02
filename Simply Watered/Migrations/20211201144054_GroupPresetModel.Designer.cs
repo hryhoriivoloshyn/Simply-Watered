@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Simply_Watered.Data;
 
 namespace Simply_Watered.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211201144054_GroupPresetModel")]
+    partial class GroupPresetModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -362,18 +364,8 @@ namespace Simply_Watered.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("IrrigModeId")
-                        .HasColumnType("bigint")
-                        .HasDefaultValueSql("((1))");
-
                     b.Property<long?>("IrrigScheduleId")
                         .HasColumnType("bigint");
-
-                    b.Property<double?>("MaxHumidity")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("MinimalHumidity")
-                        .HasColumnType("float");
 
                     b.Property<long?>("RegionId")
                         .HasColumnType("bigint");
@@ -387,8 +379,6 @@ namespace Simply_Watered.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("DeviceId");
-
-                    b.HasIndex("IrrigModeId");
 
                     b.HasIndex("RegionId");
 
@@ -412,56 +402,35 @@ namespace Simply_Watered.Migrations
                     b.ToTable("DevicesSchedules");
                 });
 
-            modelBuilder.Entity("Simply_Watered.Models.IrrigationHistory", b =>
+            modelBuilder.Entity("Simply_Watered.Models.GroupPresets", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<long>("DeviceId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("EndDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("IrrigModeId")
+                    b.Property<long>("GroupId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("NormalizedEndDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long?>("IrrigModeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasDefaultValueSql("((1))");
 
-                    b.Property<string>("NormalizedEndTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedStartDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedStartTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("ReadingEndHumidity")
+                    b.Property<double?>("MaxHumidity")
                         .HasColumnType("float");
 
-                    b.Property<double?>("ReadingEndTemp")
+                    b.Property<double?>("MinimalHumidity")
                         .HasColumnType("float");
 
-                    b.Property<double?>("ReadingStartHumidity")
-                        .HasColumnType("float");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("ReadingStartTemp")
-                        .HasColumnType("float");
+                    b.HasKey("DeviceId", "GroupId");
 
-                    b.Property<DateTime>("StartDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("IrrigModeId");
 
-                    b.ToTable("IrrigationHistory");
+                    b.ToTable("GroupPresets");
                 });
 
             modelBuilder.Entity("Simply_Watered.Models.IrrigationModes", b =>
@@ -643,12 +612,6 @@ namespace Simply_Watered.Migrations
 
             modelBuilder.Entity("Simply_Watered.Models.Devices", b =>
                 {
-                    b.HasOne("Simply_Watered.Models.IrrigationModes", "IrrigMode")
-                        .WithMany("Devices")
-                        .HasForeignKey("IrrigModeId")
-                        .HasConstraintName("FK_Devices_IrrigationModes")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("Simply_Watered.Models.Regions", "Region")
                         .WithMany("Devices")
                         .HasForeignKey("RegionId")
@@ -679,19 +642,26 @@ namespace Simply_Watered.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Simply_Watered.Models.IrrigationHistory", b =>
+            modelBuilder.Entity("Simply_Watered.Models.GroupPresets", b =>
                 {
                     b.HasOne("Simply_Watered.Models.Devices", "Device")
-                        .WithMany("IrrigationHistories")
+                        .WithMany("Presets")
                         .HasForeignKey("DeviceId")
-                        .HasConstraintName("FK_IrrigationHistory_Devices")
+                        .HasConstraintName("FK_RegionPresets_Devices")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Simply_Watered.Models.RegionGroups", "RegionGroup")
+                        .WithMany("Presets")
+                        .HasForeignKey("GroupId")
+                        .HasConstraintName("FK_RegionPresets_RegionGroups")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Simply_Watered.Models.IrrigationModes", "IrrigMode")
-                        .WithMany("IrrigationHistories")
+                        .WithMany("Presets")
                         .HasForeignKey("IrrigModeId")
-                        .HasConstraintName("FK_IrrigationHistory_IrrigationModes")
+                        .HasConstraintName("FK_Devices_IrrigationModes")
                         .OnDelete(DeleteBehavior.SetNull);
                 });
 

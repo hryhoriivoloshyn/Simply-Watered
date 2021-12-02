@@ -24,6 +24,7 @@ namespace Simply_Watered.Data
         public virtual DbSet<DeviceTypes> DeviceTypes { get; set; }
         public virtual DbSet<IrrigationModes> IrrigationModes { get; set; }
         public virtual DbSet<IrrigationSchedules> IrrigationSchedules { get; set; }
+        public virtual DbSet<IrrigationHistory> IrrigationHistory { get; set; }
         public virtual DbSet<ScheduleTimespans> ScheduleTimespans { get; set; }
         public virtual DbSet<DevicesSchedules> DevicesSchedules { get; set; }
         public virtual DbSet<RegionGroups> RegionGroups { get; set; }
@@ -122,6 +123,20 @@ namespace Simply_Watered.Data
                 //    .WithMany(p => p.IrrigationSchedules)
                 //    .HasForeignKey(d => d.DeviceId)
                 //    .HasConstraintName("FK_IrrigationSchedules_Devices");
+            });
+
+            modelBuilder.Entity<IrrigationHistory>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasOne(h => h.Device)
+                    .WithMany(d => d.IrrigationHistories)
+                    .HasForeignKey(h => h.DeviceId)
+                    .HasConstraintName("FK_IrrigationHistory_Devices");
+                entity.HasOne(h => h.IrrigMode)
+                    .WithMany(d => d.IrrigationHistories)
+                    .HasForeignKey(h => h.IrrigModeId)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("FK_IrrigationHistory_IrrigationModes");
             });
 
             modelBuilder.Entity<DevicesSchedules>(entity =>

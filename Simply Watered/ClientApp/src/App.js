@@ -16,6 +16,7 @@ import {ReadingList} from './components/Readings';
 import {ScheduleList} from './components/ScheduleList';
 import { ScheduleAdding } from './components/SchedulesAdding';
 import './custom.css'
+import { IrrigationHistory } from './components/IrrigationHistory';
 
 export default class App extends Component {
   static displayName = App.name;
@@ -32,6 +33,7 @@ export default class App extends Component {
             <AuthorizeRoute exact path='/regiongroups/:id/regions/add' component={RegionAdding} />
             <AuthorizeRoute exact path='/regiongroups/:id/regions/:id/devices' component={DeviceList} />
             <AuthorizeRoute exact path='/regiongroups/:id/regions/:id/devices/:id/readings' component={ReadingList} />
+            <AuthorizeRoute exact path='/regiongroups/:id/regions/:id/devices/:id/irrigationhistory' component={IrrigationHistory} />
             <AuthorizeRoute exact path='/regiongroups/:id/schedules' component={ScheduleList} />
             <AuthorizeRoute path='/regiongroups/:id/schedules/add' component={ScheduleAdding}/>
           </Switch> 

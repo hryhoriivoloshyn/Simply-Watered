@@ -179,5 +179,20 @@ namespace Simply_Watered.Controllers
             }
             return NotFound();
         }
+
+        [HttpDelete("{scheduleId:long}")]
+        public async Task<IActionResult> Delete(long groupId, long scheduleId)
+        {
+            IrrigationSchedules schedule =
+                await _context.IrrigationSchedules.FirstOrDefaultAsync(s => s.IrrigScheduleId == scheduleId);
+            if (schedule != null)
+            {
+                _context.Remove(schedule);
+                await _context.SaveChangesAsync();
+                return Ok(scheduleId);
+            }
+            
+            return NotFound();
+        }
     }
 }

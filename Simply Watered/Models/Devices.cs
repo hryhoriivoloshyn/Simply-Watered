@@ -29,6 +29,7 @@ namespace Simply_Watered.Models
 
         public virtual DeviceTypes DeviceType { get; set; }
         public virtual ICollection<DeviceReadings> DeviceReadings { get; set; }
+        public virtual  ICollection<IrrigationHistory> IrrigationHistories { get; set; }
         //public virtual ICollection<IrrigationSchedules> IrrigationSchedules { get; set; }
 
         public virtual ICollection<DevicesSchedules> DevicesSchedules { get; set; }

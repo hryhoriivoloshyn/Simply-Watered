@@ -10,5 +10,7 @@ namespace Simply_Watered.ViewModels
     {
         public IEnumerable<Regions> Regions { get; set; }
         public RegionGroups RegionGroup { get; set; } 
+        public IEnumerable<IrrigationModes> Modes { get; set; }
+        //public IEnumerable<DeviceTypes> Types { get; set; }
     }
 }

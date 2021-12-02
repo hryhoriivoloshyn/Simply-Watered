@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Simply_Watered.Data;
 
 namespace Simply_Watered.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211201175753_RevertChanges")]
+    partial class RevertChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -412,58 +414,6 @@ namespace Simply_Watered.Migrations
                     b.ToTable("DevicesSchedules");
                 });
 
-            modelBuilder.Entity("Simply_Watered.Models.IrrigationHistory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("DeviceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("EndDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("IrrigModeId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("NormalizedEndDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedEndTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedStartDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedStartTime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("ReadingEndHumidity")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("ReadingEndTemp")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("ReadingStartHumidity")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("ReadingStartTemp")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("StartDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.HasIndex("IrrigModeId");
-
-                    b.ToTable("IrrigationHistory");
-                });
-
             modelBuilder.Entity("Simply_Watered.Models.IrrigationModes", b =>
                 {
                     b.Property<long>("IrrigModeId")
@@ -677,22 +627,6 @@ namespace Simply_Watered.Migrations
                         .HasConstraintName("FK_DevicesSchedules_IrrigationSchedules")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Simply_Watered.Models.IrrigationHistory", b =>
-                {
-                    b.HasOne("Simply_Watered.Models.Devices", "Device")
-                        .WithMany("IrrigationHistories")
-                        .HasForeignKey("DeviceId")
-                        .HasConstraintName("FK_IrrigationHistory_Devices")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Simply_Watered.Models.IrrigationModes", "IrrigMode")
-                        .WithMany("IrrigationHistories")
-                        .HasForeignKey("IrrigModeId")
-                        .HasConstraintName("FK_IrrigationHistory_IrrigationModes")
-                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("Simply_Watered.Models.RegionGroups", b =>
