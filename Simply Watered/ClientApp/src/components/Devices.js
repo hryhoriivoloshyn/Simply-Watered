@@ -76,18 +76,19 @@ export class DeviceList extends Component{
                         <td>{device.deviceType.deviceName}</td>
                         <td>{device.deviceType.deviceDescription}</td>
                         <td>{device.serialNumber}</td>
-                        <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveDevice(device); } }>Видалити</button></td>
                         <td><Link className="btn btn-outline-primary" role="button"
                         to=
                         {{
-                        pathname: `${this.state.path}/${device.deviceId}/readings`,
+                        pathname: `${this.state.path}/${device.deviceId}/irrigationhistory`,
                         state: { deviceId: device.deviceId }
                         }}
 
                         >
-                        Переглянути показники пристрою
+                        Переглянути історію зрошення
                         </Link>
                         </td>
+                        <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveDevice(device); } }>Видалити</button></td>
+                      
                     </tr>
 
 

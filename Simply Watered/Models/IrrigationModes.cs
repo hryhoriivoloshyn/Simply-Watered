@@ -18,5 +18,6 @@ namespace Simply_Watered.Models
         public string ModeName { get; set; }
 
         public virtual ICollection<Devices> Devices { get; set; }
+        public virtual ICollection<IrrigationHistory> IrrigationHistories { get; set; }
     }
 }

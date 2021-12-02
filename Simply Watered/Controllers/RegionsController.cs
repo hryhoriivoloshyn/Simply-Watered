@@ -36,13 +36,30 @@ namespace Simply_Watered.Controllers
         [HttpGet]
         public async Task<RegionsViewModel> Get(long groupId)
         {
-           
-                IEnumerable<Regions> regions = _context.Regions.Where(r => r.RegionGroupId == groupId).ToArray();
-                RegionGroups regionGroup = await _context.RegionGroups.Where(g => g.RegionGroupId == groupId).FirstOrDefaultAsync();
+
+            //IEnumerable<Regions> regions = _context.Regions
+            //    .Include(r => r.Devices.Select(d=>d.IrrigMode))
+            //    .Include(r=>r.Devices.Select(d=>d.DeviceType))
+            //    .Where(r => r.RegionGroupId == groupId)
+            //    .ToList();
+            IEnumerable<Regions> regions = _context.Regions
+                .Include(r => r.Devices)
+                .Where(r => r.RegionGroupId == groupId)
+                .ToArray();
+
+            RegionGroups regionGroup = await _context.RegionGroups.Where(g => g.RegionGroupId == groupId).FirstOrDefaultAsync();
+                IEnumerable<IrrigationModes> modes = await _context.IrrigationModes.ToListAsync();
+
+
+                IEnumerable<DeviceTypes> types = await _context.DeviceTypes.ToListAsync();
+
+
                 RegionsViewModel viewModel = new RegionsViewModel()
                 {
                     Regions = regions,
-                    RegionGroup = regionGroup
+                    RegionGroup = regionGroup,
+                    Modes=modes,
+                    //Types=types
                 };
 
                 return viewModel;

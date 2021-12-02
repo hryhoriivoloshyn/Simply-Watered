@@ -12,7 +12,7 @@ export class ScheduleList extends Component{
             regionGroup: {GroupName:"",
                           GroupDescription: ""
                          },
-            irrigationModes: [],
+            // irrigationModes: [],
             minStartDate: "",    
             minEndDate: "",         
             path: this.props.location.pathname
@@ -25,13 +25,13 @@ export class ScheduleList extends Component{
 
     onRemoveSchedule= async(schedule)=>{
 
-        console.log("Проверка группы для удаления");
-        let deletemodel={id:schedule.scheduleId};
+
+
     if (schedule) {
-        console.log("Удаление");
+
         let token = await authService.getAccessToken();
-        console.log(token);
-        let response = await fetch(`api${this.state.path}`, {
+
+        let response = await fetch(`api${this.state.path}/${schedule.irrigScheduleId}`, {
             method: "DELETE",
             headers: !token ? {
                 'Content-Type': 'application/json'
@@ -39,11 +39,11 @@ export class ScheduleList extends Component{
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(deletemodel)
+  
         }).then(async ()=>{
             await this.loadData();
         });
-        console.log(response);
+
     }
     }
     componentDidMount() {
@@ -75,7 +75,7 @@ export class ScheduleList extends Component{
 
             <button className="btn btn-secondary" onClick={this.goBack}>Повернутися</button>
 
-            <GroupSettings groupId={this.state.groupId} irrigationModes={this.state.irrigationModes} loadData={this.loadData.bind(this)} ></GroupSettings>
+            {/* <GroupSettings groupId={this.state.groupId} irrigationModes={this.state.irrigationModes} loadData={this.loadData.bind(this)} ></GroupSettings> */}
 
             <table className='table table-striped text-center mt-3' aria-labelledby="tabelLabel">
                 <thead>
@@ -88,7 +88,7 @@ export class ScheduleList extends Component{
                 </thead>
                 <tbody>
 
-                    {schedules.map(schedule => <tr key={schedule.scheduleId}>
+                    {schedules.map(schedule => <tr key={schedule.irrigScheduleId}>
                         <td>{schedule.irrigScheduleName}</td>
                         <td>{schedule.scheduleStartDate.substr(0,10)}</td>
                         <td>{schedule.scheduleEndDate.substr(0,10)}</td>
@@ -126,7 +126,7 @@ export class ScheduleList extends Component{
         console.log(data);
         this.setState({ schedules: data.schedules,
              regionGroup:data.regionGroup,
-             irrigationModes: data.irrigationModes,
+            //  irrigationModes: data.irrigationModes,
              minStartDate:data.minStartDate,
              minEndDate: data.minEndDate,
              loading: false });

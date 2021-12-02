@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Simply_Watered.Data;
 
 namespace Simply_Watered.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211202160112_IrrigationHistory")]
+    partial class IrrigationHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -425,7 +427,7 @@ namespace Simply_Watered.Migrations
                     b.Property<DateTime>("EndDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("IrrigModeId")
+                    b.Property<long>("IrrigModeId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("NormalizedEndDate")
@@ -692,7 +694,8 @@ namespace Simply_Watered.Migrations
                         .WithMany("IrrigationHistories")
                         .HasForeignKey("IrrigModeId")
                         .HasConstraintName("FK_IrrigationHistory_IrrigationModes")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Simply_Watered.Models.RegionGroups", b =>

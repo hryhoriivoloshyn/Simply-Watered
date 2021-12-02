@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import authService from './api-authorization/AuthorizeService';
+import PropTypes from "prop-types";
+import { withRouter } from "react-router";
+
 
 export class GroupSettings extends React.Component {
+
+
+      
     constructor(props) {
         super(props);
+      let pathname= this.props.pathname;
         this.state = {
-            groupId: this.props.groupId,
-            irrigationModes: this.props.irrigationModes,
+            resourcepath: pathname!=undefined?pathname.substring(0,pathname.lastIndexOf('/')):"",
+            modes: this.props.modes,
             errorServerMessage: '',
             maxHumidityDisabled: true,
             minHumidity: '',
@@ -63,16 +70,17 @@ export class GroupSettings extends React.Component {
 
     onChangeSetting = async () => {
         let settingModel = {
-            RegionId: this.state.groupId,
-            
+            ModeId: this.state.fields["irrigationMode"],
+            MinHumidity: this.state.fields["minHumidity"],
+            MaxHumidity: this.state.fields["maxHumidity"]
         };
 
       
 
         let token = await authService.getAccessToken();
 
-        await fetch('settings/add', {
-            method: "POST",
+        await fetch(`api${this.state.resourcepath}`, {
+            method: "PUT",
             headers: !token ? {
                 'Content-Type': 'application/json'
             } : {
@@ -85,7 +93,7 @@ export class GroupSettings extends React.Component {
         .then(async ()=>await this.props.loadData() )
         .then(this.setState({errors:{}, errorServerMessage: ''}))
         .catch(error=>{
-            this.setState({errorServerMessage:"Номер пристрою невірний, або він вже використовується", groupId: this.state.groupId,errors:{}})
+            this.setState({errorServerMessage:"Номер пристрою невірний, або він вже використовується",errors:{}})
         });
 
        
@@ -94,7 +102,7 @@ export class GroupSettings extends React.Component {
 
     render() {
        
-        let irrigationModes=this.state.irrigationModes;
+        let modes=this.state.modes;
         return (
             <>
             
@@ -107,19 +115,20 @@ export class GroupSettings extends React.Component {
                 >      
                     <div className="col-md-6">
                         <h3>Налаштування</h3>
-                        {irrigationModes.map(mode =>
+                        <h5>Оберіть режим зрошення</h5>
+                        {modes.map(mode =>
                             <div className="form-check">
                                 
                                     
                             <input className="form-check-input"
-                                id="Input.IrrigationMode"
+                                id={mode.irrigModeId}
                                 name="irrigationMode"
                                 ref="irrigationMode"
                                 type="radio"
                                 onChange={this.handleChange.bind(this, "irrigationMode")}
                                 value={mode.irrigModeId}
                             />   
-                            <label for="Input.IrrigationMode1">{mode.modeName}</label>
+                            <label for={mode.irrigModeId}>{mode.modeName}</label>
                             <div className="error-message"> { this.state.errorServerMessage } </div> 
                             <span className="error-message">{this.state.errors["irrigationMode"]}</span>
                     </div>
@@ -170,14 +179,12 @@ export class GroupSettings extends React.Component {
                              </div>
                             
                             <div className="form-group ">
-                                <input type="submit" value="Додати" class="btn btn-primary"></input>
+                                <input type="submit" value="Застосувати налаштування" class="btn btn-success"></input>
                             </div>
                             
                     </div>
                 </form>
-                <div className="col-md-6">
-                <button className="btn btn-secondary" onClick={this.props.goBack}>Повернутися</button>
-                </div>
+               
             
 
     </>

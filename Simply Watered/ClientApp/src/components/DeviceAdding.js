@@ -110,7 +110,7 @@ export class DeviceAdding extends React.Component {
                                 </fieldset>
                             </div>
                             <div className="form-group ">
-                                <input type="submit" value="Додати" class="btn btn-primary"></input>
+                                <input type="submit" value="Додати" class="btn btn-success"></input>
                             </div>
                             
                     </div>
