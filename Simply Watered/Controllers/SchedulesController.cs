@@ -52,7 +52,7 @@ namespace Simply_Watered.Controllers
                     .Select(s => s.ScheduleId)
                     .ToArray();
 
-            IEnumerable<IrrigationSchedules> schedules = _context.IrrigationSchedules
+            IEnumerable<IrrigationSchedules> schedules = _context.IrrigationSchedules.Distinct()
                 .Where(i => scheduleIds.Contains(i.IrrigScheduleId)).ToList();
 
             return schedules;
@@ -63,12 +63,7 @@ namespace Simply_Watered.Controllers
         public async Task<SchedulesViewModel> Get(long groupId)
         {
 
-         
-              
-
                 RegionGroups regionGroup = _context.RegionGroups.FirstOrDefault(g => g.RegionGroupId == groupId);
-
-
 
                 IEnumerable<IrrigationSchedules> schedules = GetSchedulesByGroupId(groupId);
 
