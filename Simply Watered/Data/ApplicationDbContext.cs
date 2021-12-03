@@ -26,7 +26,7 @@ namespace Simply_Watered.Data
         public virtual DbSet<IrrigationSchedules> IrrigationSchedules { get; set; }
         public virtual DbSet<IrrigationHistory> IrrigationHistory { get; set; }
         public virtual DbSet<ScheduleTimespans> ScheduleTimespans { get; set; }
-        public virtual DbSet<DevicesSchedules> DevicesSchedules { get; set; }
+        //public virtual DbSet<GroupsSchedules> DevicesSchedules { get; set; }
         public virtual DbSet<RegionGroups> RegionGroups { get; set; }
         public virtual DbSet<Regions> Regions { get; set; }
         
@@ -65,7 +65,12 @@ namespace Simply_Watered.Data
                     .IsRequired()
                     .HasMaxLength(450);
 
-                entity.Property(e => e.IrrigModeId).HasDefaultValueSql("((1))");
+                entity.Property(e => e.IrrigModeId).IsRequired().HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.MinimalHumidity).IsRequired().HasDefaultValue(50);
+
+                entity.Property(e => e.MaxHumidity).IsRequired().HasDefaultValue(80);
+
 
                 entity.HasOne(d => d.IrrigMode)
                     .WithMany(p => p.Devices)
@@ -118,6 +123,11 @@ namespace Simply_Watered.Data
                 entity.Property(e => e.IrrigScheduleName)
                     .IsRequired()
                     .HasMaxLength(450);
+                entity.HasOne(e => e.RegionGroup)
+                    .WithMany(u => u.IrrigationSchedules)
+                    .HasForeignKey(e => e.RegionGroupId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_IrrigationSchedules_RegionGroups");
 
                 //entity.HasOne(d => d.Device)
                 //    .WithMany(p => p.IrrigationSchedules)
@@ -139,22 +149,7 @@ namespace Simply_Watered.Data
                     .HasConstraintName("FK_IrrigationHistory_IrrigationModes");
             });
 
-            modelBuilder.Entity<DevicesSchedules>(entity =>
-                {
-                    entity.HasKey(e => new {e.DeviceId, e.ScheduleId});
-
-                    entity.HasOne(e => e.Device)
-                        .WithMany(d => d.DevicesSchedules)
-                        .HasForeignKey(e => e.DeviceId)
-                        .HasConstraintName("FK_DevicesSchedules_Devices");
-
-                    entity.HasOne(e => e.Schedule)
-                        .WithMany(s => s.DevicesSchedules)
-                        .HasForeignKey(e => e.ScheduleId)
-                        .HasConstraintName("FK_DevicesSchedules_IrrigationSchedules");
-
-                }
-            );
+           
             modelBuilder.Entity<RegionGroups>(entity =>
             {
                 entity.HasKey(e => e.RegionGroupId);
@@ -163,6 +158,7 @@ namespace Simply_Watered.Data
                     .WithMany(u => u.RegionGroups)
                     .HasForeignKey(e => e.UserId)
                     .HasConstraintName("FK_RegionGroups_Users");
+            
 
                 entity.Property(e => e.GroupName)
                     .IsRequired()

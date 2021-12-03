@@ -12,17 +12,19 @@ namespace Simply_Watered.Models
         public IrrigationSchedules()
         {
             ScheduleTimespans = new HashSet<ScheduleTimespans>();
-            DevicesSchedules = new HashSet<DevicesSchedules>();
+            //DevicesSchedules = new HashSet<DevicesSchedules>();
         }
 
         public long IrrigScheduleId { get; set; }
         public string IrrigScheduleName { get; set; }
         public DateTime ScheduleStartDate { get; set; }
         public DateTime ScheduleEndDate { get; set; }
+        public long RegionGroupId { get; set; }
 
 
         //public virtual Devices Device { get; set; }
         public virtual ICollection<ScheduleTimespans> ScheduleTimespans { get; set; }
-        public virtual ICollection<DevicesSchedules> DevicesSchedules { get; set; }
+        //public virtual ICollection<DevicesSchedules> DevicesSchedules { get; set; }
+        public virtual RegionGroups RegionGroup { get; set; }
     }
 }

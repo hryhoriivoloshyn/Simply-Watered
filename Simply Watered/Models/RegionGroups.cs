@@ -22,5 +22,6 @@ namespace Simply_Watered.Models
         public virtual ApplicationUser User { get; set; }
 
         public virtual ICollection<Regions> Regions { get; set; }
+        public virtual ICollection<IrrigationSchedules> IrrigationSchedules { get; set; }
     }
 }

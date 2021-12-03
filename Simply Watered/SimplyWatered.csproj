@@ -12,18 +12,22 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.21" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.17" />
-    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.17" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.17" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.17" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.17" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.17" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.17" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.17" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.21" />
+    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.21" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.21" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.21" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.21">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.4.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +46,14 @@
     <Compile Remove="Migrations\20211123123429_RegionsAndModesSetNullChange.Designer.cs" />
     <Compile Remove="Migrations\20211123123847_RegionsAndModesSetNullChange.cs" />
     <Compile Remove="Migrations\20211123123847_RegionsAndModesSetNullChange.Designer.cs" />
+    <Compile Remove="Migrations\20211203095841_SchedulesToGroups.cs" />
+    <Compile Remove="Migrations\20211203095841_SchedulesToGroups.Designer.cs" />
+    <Compile Remove="Migrations\20211203100551_SchedulesToGroup.cs" />
+    <Compile Remove="Migrations\20211203100551_SchedulesToGroup.Designer.cs" />
+    <Compile Remove="Migrations\20211203130144_DefaultHumidity.cs" />
+    <Compile Remove="Migrations\20211203130144_DefaultHumidity.Designer.cs" />
+    <Compile Remove="Migrations\20211203130250_DefaultHumidity.cs" />
+    <Compile Remove="Migrations\20211203130250_DefaultHumidity.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
