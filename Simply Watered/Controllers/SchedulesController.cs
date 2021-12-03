@@ -32,73 +32,86 @@ namespace Simply_Watered.Controllers
 
         }
 
-       
 
-        private IEnumerable<IrrigationSchedules> GetSchedulesByGroupId(long groupId)
-        {
-            long[] regionIds = _context.Regions
-                .Where(r => r.RegionGroupId == groupId)
-                .Select(r => r.RegionId)
-                .ToArray();
 
-            long[] deviceIds = _context.Devices
-                .Where(d => regionIds.Contains((long)d.RegionId))
-                .Select(d => d.DeviceId)
-                .ToArray();
+        //private IEnumerable<IrrigationSchedules> GetSchedulesByGroupId(long groupId)
+        //{
+        //    long[] regionIds = _context.Regions
+        //        .Where(r => r.RegionGroupId == groupId)
+        //        .Select(r => r.RegionId)
+        //        .ToArray();
 
-            long[] scheduleIds =
-                _context.DevicesSchedules
-                    .Where(s => deviceIds.Contains(s.DeviceId))
-                    .Select(s => s.ScheduleId)
-                    .ToArray();
+        //    long[] deviceIds = _context.Devices
+        //        .Where(d => regionIds.Contains((long)d.RegionId))
+        //        .Select(d => d.DeviceId)
+        //        .ToArray();
 
-            IEnumerable<IrrigationSchedules> schedules = _context.IrrigationSchedules.Distinct()
-                .Where(i => scheduleIds.Contains(i.IrrigScheduleId)).ToList();
+        //    long[] scheduleIds =
+        //        _context.DevicesSchedules
+        //            .Where(s => deviceIds.Contains(s.DeviceId))
+        //            .Select(s => s.ScheduleId)
+        //            .ToArray();
 
-            return schedules;
-        }
+        //    IEnumerable<IrrigationSchedules> schedules = _context.IrrigationSchedules.Distinct()
+        //        .Where(i => scheduleIds.Contains(i.IrrigScheduleId)).ToList();
 
-    
+        //    return schedules;
+        //}
+
+
         [HttpGet]
         public async Task<SchedulesViewModel> Get(long groupId)
         {
 
-                RegionGroups regionGroup = _context.RegionGroups.FirstOrDefault(g => g.RegionGroupId == groupId);
+            RegionGroups regionGroup = _context.RegionGroups.FirstOrDefault(g => g.RegionGroupId == groupId);
 
-                IEnumerable<IrrigationSchedules> schedules = GetSchedulesByGroupId(groupId);
+            IEnumerable<IrrigationSchedules> schedules = await _context.IrrigationSchedules
+                .Where(s => s.RegionGroupId == groupId)
+                .ToListAsync();
+            DateTime minStartDate = DateTime.Now;
 
-                foreach (var schedule in schedules)
+            if (!schedules.Any())
+            {
+                return new SchedulesViewModel()
                 {
-                    ICollection<ScheduleTimespans> timespans =
-                        _context.ScheduleTimespans.Where(t => t.IrrigScheduleId == schedule.IrrigScheduleId).ToList();
-                    schedule.ScheduleTimespans = timespans;
-                }
-
-                DateTime LastEndDate = schedules.Max(s => s.ScheduleEndDate);
-                DateTime minStartDate = DateTime.Now;
-                if (LastEndDate > minStartDate)
-                {
-                    minStartDate = LastEndDate.AddDays(1);
-                }
-
-                IEnumerable<IrrigationModes> irrigationModes = _context.IrrigationModes.ToList(); 
-
-                SchedulesViewModel viewModel = new SchedulesViewModel()
-                {
-                    Schedules = schedules,
+                    Schedules = null,
                     RegionGroup = regionGroup,
-                    IrrigationModes = irrigationModes,
                     MinStartDate = minStartDate.ToString("yyyy-MM-dd"),
-                    MinEndDate=minStartDate.AddDays(1).ToString("yyyy-MM-dd")
+                    MinEndDate = minStartDate.AddDays(1).ToString("yyyy-MM-dd")
                 };
+            }
 
+            foreach (var schedule in schedules)
+            {
+                ICollection<ScheduleTimespans> timespans =
+                    _context.ScheduleTimespans.Where(t => t.IrrigScheduleId == schedule.IrrigScheduleId).ToList();
+                schedule.ScheduleTimespans = timespans;
+            }
+
+            DateTime LastEndDate = schedules.Max(s => s.ScheduleEndDate);
         
-                return viewModel;
+            if (LastEndDate > minStartDate)
+            {
+                minStartDate = LastEndDate.AddDays(1);
+            }
+
             
+
+            SchedulesViewModel viewModel = new SchedulesViewModel()
+            {
+                Schedules = schedules,
+                RegionGroup = regionGroup,
+                MinStartDate = minStartDate.ToString("yyyy-MM-dd"),
+                MinEndDate = minStartDate.AddDays(1).ToString("yyyy-MM-dd")
+            };
+
+
+            return viewModel;
+
         }
 
 
-       
+
         public class AddModel
         {
 
@@ -143,7 +156,8 @@ namespace Simply_Watered.Controllers
                 {
                     IrrigScheduleName = addModel.ScheduleName,
                     ScheduleStartDate = startDate,
-                    ScheduleEndDate = endDate
+                    ScheduleEndDate = endDate,
+                    RegionGroupId = groupId
                 };
 
                 _context.IrrigationSchedules.Add(schedule);
@@ -158,16 +172,7 @@ namespace Simply_Watered.Controllers
 
                 _context.ScheduleTimespans.Add(timespan);
 
-                IEnumerable<Devices> devices = GetDevicesByGroupId(groupId);
-
-                foreach (var device in devices)
-                {
-                    _context.DevicesSchedules.Add(new DevicesSchedules()
-                    {
-                        Device = device,
-                        Schedule = schedule
-                    });
-                }
+               
 
                 await _context.SaveChangesAsync();
                 return Ok(addModel);

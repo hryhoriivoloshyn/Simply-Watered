@@ -72,6 +72,8 @@ namespace Simply_Watered.Controllers
                 if (device != null)
                 {
                     device.RegionId = null;
+                    device.MinimalHumidity = 50;
+                    device.MaxHumidity = 80;
                     _context.Devices.Update(device);
                     //IEnumerable<DevicesSchedules> deviceSchedules= await _context.DevicesSchedules.Where(s => s.DeviceId == id).ToListAsync();
                     //if (deviceSchedules != null)

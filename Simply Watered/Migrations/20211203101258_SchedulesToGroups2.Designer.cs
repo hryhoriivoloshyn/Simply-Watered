@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Simply_Watered.Data;
 
 namespace Simply_Watered.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211203101258_SchedulesToGroups2")]
+    partial class SchedulesToGroups2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -362,19 +364,18 @@ namespace Simply_Watered.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("IrrigModeId")
+                    b.Property<long?>("IrrigModeId")
                         .HasColumnType("bigint")
                         .HasDefaultValueSql("((1))");
 
-                    b.Property<double>("MaxHumidity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("float")
-                        .HasDefaultValue(80.0);
+                    b.Property<long?>("IrrigScheduleId")
+                        .HasColumnType("bigint");
 
-                    b.Property<double>("MinimalHumidity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("float")
-                        .HasDefaultValue(50.0);
+                    b.Property<double?>("MaxHumidity")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("MinimalHumidity")
+                        .HasColumnType("float");
 
                     b.Property<long?>("RegionId")
                         .HasColumnType("bigint");
@@ -638,8 +639,7 @@ namespace Simply_Watered.Migrations
                         .WithMany("Devices")
                         .HasForeignKey("IrrigModeId")
                         .HasConstraintName("FK_Devices_IrrigationModes")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Simply_Watered.Models.Regions", "Region")
                         .WithMany("Devices")

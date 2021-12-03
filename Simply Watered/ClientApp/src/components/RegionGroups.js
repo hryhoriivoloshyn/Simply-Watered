@@ -67,7 +67,7 @@ export class GroupList extends Component {
                     <tr>
                         <th>Назва</th>
                         <th>Опис</th>
-                        <th colSpan="2">Дії</th>
+                        <th colSpan="3">Дії</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,7 +75,6 @@ export class GroupList extends Component {
                     {regiongroups.map(regiongroup => <tr key={regiongroup.regionGroupId}>
                         <td>{regiongroup.groupName}</td>
                         <td>{regiongroup.regionGroupDescription}</td>
-                        <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveGroup(regiongroup); } }>Видалити</button></td>
                         <td><Link
                         className="btn btn-outline-primary"
                         role="button"
@@ -100,6 +99,8 @@ export class GroupList extends Component {
                          Задати розклад зрошення
                         </Link>
                         </td>
+                        <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveGroup(regiongroup); } }>Видалити</button></td>
+
                     </tr>
 
 

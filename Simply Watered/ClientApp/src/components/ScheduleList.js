@@ -87,18 +87,18 @@ export class ScheduleList extends Component{
                     </tr>
                 </thead>
                 <tbody>
-
-                    {schedules.map(schedule => <tr key={schedule.irrigScheduleId}>
-                        <td>{schedule.irrigScheduleName}</td>
-                        <td>{schedule.scheduleStartDate.substr(0,10)}</td>
-                        <td>{schedule.scheduleEndDate.substr(0,10)}</td>
-                        <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveSchedule(schedule); } }>Видалити</button></td>
-                        <td>
-                        </td>
-                    </tr>
-
-
-                    )}
+                {this.state.schedules!=null &&
+                 schedules.map(schedule => <tr key={schedule.irrigScheduleId}>
+                    <td>{schedule.irrigScheduleName}</td>
+                    <td>{schedule.scheduleStartDate.substr(0,10)}</td>
+                    <td>{schedule.scheduleEndDate.substr(0,10)}</td>
+                    <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveSchedule(schedule); } }>Видалити</button></td>
+                    <td>
+                    </td>
+                </tr>
+                )
+                }   
+                   
                 </tbody>
             </table>
             

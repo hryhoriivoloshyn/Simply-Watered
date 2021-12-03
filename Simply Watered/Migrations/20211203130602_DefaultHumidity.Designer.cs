@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Simply_Watered.Data;
 
 namespace Simply_Watered.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211203130602_DefaultHumidity")]
+    partial class DefaultHumidity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -365,6 +367,9 @@ namespace Simply_Watered.Migrations
                     b.Property<long>("IrrigModeId")
                         .HasColumnType("bigint")
                         .HasDefaultValueSql("((1))");
+
+                    b.Property<long?>("IrrigScheduleId")
+                        .HasColumnType("bigint");
 
                     b.Property<double>("MaxHumidity")
                         .ValueGeneratedOnAdd()

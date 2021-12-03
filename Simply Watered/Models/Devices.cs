@@ -12,15 +12,15 @@ namespace Simply_Watered.Models
         public Devices()
         {
             DeviceReadings = new HashSet<DeviceReadings>();
-            DevicesSchedules = new HashSet<DevicesSchedules>();
+            IrrigationHistories = new HashSet<IrrigationHistory>();
+            //DevicesSchedules = new HashSet<DevicesSchedules>();
         }
 
         public long DeviceId { get; set; }
-        public long? IrrigModeId { get; set; }
+        public long IrrigModeId { get; set; }
         public long? RegionId { get; set; }
-        public long? IrrigScheduleId { get; set; }
-        public double? MinimalHumidity { get; set; }
-        public double? MaxHumidity { get; set; }
+        public double MinimalHumidity { get; set; }
+        public double MaxHumidity { get; set; }
         public string SerialNumber { get; set; }
         public long? TypeId { get; set; }
 
@@ -32,6 +32,6 @@ namespace Simply_Watered.Models
         public virtual  ICollection<IrrigationHistory> IrrigationHistories { get; set; }
         //public virtual ICollection<IrrigationSchedules> IrrigationSchedules { get; set; }
 
-        public virtual ICollection<DevicesSchedules> DevicesSchedules { get; set; }
+        //public virtual ICollection<DevicesSchedules> DevicesSchedules { get; set; }
     }
 }
