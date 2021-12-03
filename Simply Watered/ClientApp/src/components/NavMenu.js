@@ -33,7 +33,7 @@ export class NavMenu extends Component {
               <ul className="navbar-nav flex-grow">
 
                 <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/regiongroups">Region groups</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/regiongroups">Переглянути ділянки</NavLink>
                 </NavItem>
                 <LoginMenu>
                 </LoginMenu>

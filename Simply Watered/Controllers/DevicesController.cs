@@ -108,6 +108,7 @@ namespace Simply_Watered.Controllers
                 
                 if (device != null)
                 {
+                    
                     if (device.RegionId != null)
                     {
                         ResponseError error = new ResponseError("DeviceIsTaken");
@@ -115,6 +116,7 @@ namespace Simply_Watered.Controllers
                     }
 
                     device.RegionId = regionId;
+                   
                     _context.Devices.Update(device);
                     await _context.SaveChangesAsync();
                     return Ok(inputModel);

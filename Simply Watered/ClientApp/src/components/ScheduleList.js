@@ -83,6 +83,8 @@ export class ScheduleList extends Component{
                         <th>Назва</th>
                         <th>Дата початку</th>
                         <th>Дата завершення</th>
+                        <th>Час початку</th>
+                        <th>Час завершення</th>
                         <th>Дії</th>
                     </tr>
                 </thead>
@@ -92,6 +94,8 @@ export class ScheduleList extends Component{
                     <td>{schedule.irrigScheduleName}</td>
                     <td>{schedule.scheduleStartDate.substr(0,10)}</td>
                     <td>{schedule.scheduleEndDate.substr(0,10)}</td>
+                    <td>{schedule.scheduleTimespans[0].start.substr(0,5)}</td>
+                    <td>{schedule.scheduleTimespans[0].finish.substr(0,5)}</td>
                     <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveSchedule(schedule); } }>Видалити</button></td>
                     <td>
                     </td>
