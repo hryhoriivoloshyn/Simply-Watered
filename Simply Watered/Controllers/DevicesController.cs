@@ -73,6 +73,12 @@ namespace Simply_Watered.Controllers
                 {
                     device.RegionId = null;
                     _context.Devices.Update(device);
+                    //IEnumerable<DevicesSchedules> deviceSchedules= await _context.DevicesSchedules.Where(s => s.DeviceId == id).ToListAsync();
+                    //if (deviceSchedules != null)
+                    //{
+                    //    _context.DevicesSchedules.RemoveRange(deviceSchedules);
+                    //}
+                  
                     await _context.SaveChangesAsync();
                     return Ok(id);
                 }
