@@ -37,11 +37,6 @@ namespace Simply_Watered.Controllers
         public async Task<RegionsViewModel> Get(long groupId)
         {
 
-            //IEnumerable<Regions> regions = _context.Regions
-            //    .Include(r => r.Devices.Select(d=>d.IrrigMode))
-            //    .Include(r=>r.Devices.Select(d=>d.DeviceType))
-            //    .Where(r => r.RegionGroupId == groupId)
-            //    .ToList();
             IEnumerable<Regions> regions = _context.Regions
                 .Include(r => r.Devices)
                 .Where(r => r.RegionGroupId == groupId)

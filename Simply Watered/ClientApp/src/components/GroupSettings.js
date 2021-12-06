@@ -93,7 +93,7 @@ export class GroupSettings extends React.Component {
         .then(async ()=>await this.props.loadData() )
         .then(this.setState({errors:{}, errorServerMessage: ''}))
         .catch(error=>{
-            this.setState({errorServerMessage:"Номер пристрою невірний, або він вже використовується",errors:{}})
+            this.setState({errorServerMessage:"Заповніть усі дані налаштування!",errors:{}})
         });
 
        
@@ -129,7 +129,7 @@ export class GroupSettings extends React.Component {
                                 value={mode.irrigModeId}
                             />   
                             <label for={mode.irrigModeId}>{mode.modeName}</label>
-                            <div className="error-message"> { this.state.errorServerMessage } </div> 
+                        
                             <span className="error-message">{this.state.errors["irrigationMode"]}</span>
                     </div>
                      )}
@@ -159,7 +159,7 @@ export class GroupSettings extends React.Component {
                                         onChange={this.handleHumidityChange.bind(this, "minHumidity")}
                                         value={this.state.fields["minHumidity"]}
                                     />   
-                                    <div className="error-message"> { this.state.errorServerMessage } </div> 
+                              
                                     <span className="error-message">{this.state.errors["minHumidity"]}</span>
                             </div>
                             <div className="form-group">

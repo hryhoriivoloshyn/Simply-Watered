@@ -56,7 +56,7 @@ export class IrrigationHistory extends Component{
                 <tbody>
 
                     {history.map(entry => <tr key={entry.id}>
-                        <td >{entry.normalizedStartdDate}</td>
+                        <td >{entry.normalizedStartDate}</td>
                         <td>{entry.normalizedStartTime}</td>
                         <td>{entry.normalizedEndTime}</td>
                         <td>{entry.readingStartTemp}&#8451;</td>
