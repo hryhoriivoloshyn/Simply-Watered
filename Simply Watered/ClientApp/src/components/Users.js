@@ -1,36 +1,36 @@
-﻿import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import authService from './api-authorization/AuthorizeService'
 import {withRouter} from "react-router-dom"
+import { AccountCreation } from './AccountCreation';
 
-export class GroupList extends Component {
-    static displayName = GroupList.name;
+export class UserList extends Component {
+    static displayName = UserList.name;
 
     constructor(props) {
         super(props);
         this.state = {
-            regiongroups: [],
+            users: [],
             loading: true,
             message: '',
-            path: this.props.location.pathname
+            pathname: this.props.location.pathname
         }
     }
 
 
-    onClick(regiongroup){
-            this.onRemoveGroup(regiongroup);
+    onClick(user){
+            this.onRemoveUser(user);
     }
 
-     onRemoveGroup= async(regiongroup)=>{
+    onRemoveUser= async(user)=>{
 
-         console.log("Проверка группы для удаления");
       
-        let groupId= regiongroup.regionGroupId;
-        if (regiongroup) {
-            console.log("Удаление");
+        let userId= user.id;
+        if (user) {
+
             let token = await authService.getAccessToken();
             console.log(token);
-            let response = await fetch(`api${this.state.path}/${groupId}`, {
+            let response = await fetch(`api${this.state.pathname}/${userId}`, {
                 method: "DELETE",
                 headers: !token ? {
                     'Content-Type': 'application/json'
@@ -53,15 +53,15 @@ export class GroupList extends Component {
 
     render() {
 
-        let regiongroups=this.state.regiongroups;
+        let users=this.state.users;
         return (
             <>
-            <h2 className="text-center">Групи ділянок</h2>
+            <h2 className="text-center">Користувачі</h2>
             <hr />
 
-            <Link to="/regiongroups/add" className="btn btn-primary mx-3" role="button" >Додати групу</Link>
+            <Link to="/users/add" className="btn btn-primary mx-3" role="button" >Додати користувача</Link>
             
-        
+            <AccountCreation pathname={this.state.pathname} loadData={this.loadData.bind(this)}></AccountCreation>
             <table className='table table-striped text-center mt-3' aria-labelledby="tabelLabel">
                 <thead>
                     <tr>
@@ -72,34 +72,22 @@ export class GroupList extends Component {
                 </thead>
                 <tbody>
 
-                    {regiongroups.map(regiongroup => <tr key={regiongroup.regionGroupId}>
-                        <td>{regiongroup.groupName}</td>
-                        <td>{regiongroup.regionGroupDescription}</td>
+                    {users.map(user => <tr key={user.id}>
+                        <td>{user.email}</td>
                         <td><Link
                         className="btn btn-outline-primary"
                         role="button"
                         to=
                         {{
-                        pathname: `${this.state.path}/${regiongroup.regionGroupId}/regions`
+                        pathname: `${this.state.path}/${user.id}/regions`
                         }}
 
                         >
                          Переглянути ділянки
                         </Link>
                         </td>
-                        <td><Link
-                        className="btn btn-outline-primary"
-                        role="button"
-                        to=
-                        {{
-                        pathname: `${this.state.path}/${regiongroup.regionGroupId}/schedules`,
-                        }}
-
-                        >
-                         Задати розклад зрошення
-                        </Link>
-                        </td>
-                        <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveGroup(regiongroup); } }>Видалити</button></td>
+                       
+                        <td><button className="btn btn-outline-dark" onClick={async () => { await this.onRemoveUser(user); } }>Видалити</button></td>
 
                     </tr>
 
@@ -113,11 +101,11 @@ export class GroupList extends Component {
     //Загрузка данных
     async loadData() {
         const token = await authService.getAccessToken();
-        const response = await fetch('api/regiongroups', {
+        const response = await fetch('api/users', {
             headers: !token ? { 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();
-        this.setState({ regiongroups: data, loading: false });
+        this.setState({ users: data, loading: false });
     }
 
 

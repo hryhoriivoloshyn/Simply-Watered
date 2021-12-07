@@ -32,10 +32,7 @@ namespace Simply_Watered.Controllers
             _userManager = userManager;
 
         }
-        public class RegionIdModel
-        {
-            public int id { get; set; }
-        }
+      
         [HttpGet]
         public async Task<DevicesViewModel> Get(long regionId)
         {
