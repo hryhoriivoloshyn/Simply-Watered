@@ -48,6 +48,7 @@ export class NavMenu extends Component {
  
 
     return (
+      <>
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
           <Container>
@@ -61,8 +62,14 @@ export class NavMenu extends Component {
                 </NavItem>
                 {this.state.admin && 
                 <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/users">Переглянути користувачів</NavLink>
+                <NavLink tag={Link} className="text-dark" to="/admin/users">Переглянути користувачів</NavLink>
                 </NavItem>
+                }
+                 {this.state.admin && 
+                <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/admin/devices">Переглянути пристрої</NavLink>
+                </NavItem>
+
                 }
                 <LoginMenu>
                 </LoginMenu>
@@ -71,6 +78,7 @@ export class NavMenu extends Component {
           </Container>
         </Navbar>
       </header>
+      </>
     );
   }
 }

@@ -29,13 +29,32 @@ namespace Simply_Watered.Controllers
             _userManager = userManager;
         }
 
+
+        [HttpGet]
+        public async Task<IEnumerable<Devices>> Get()
+        {
+            IEnumerable<Devices> devices = await _context.Devices.ToListAsync();
+            IEnumerable<DeviceTypes> types = await _context.DeviceTypes.ToListAsync();
+            return devices;
+        }
+
         [HttpPut("{deviceId:long}")]
-        public async Task<IActionResult> DisableDevice(long deviceId)
+        public async Task<IActionResult> ChangeDeviceActive(long deviceId)
         {
             var device = await _context.Devices.FirstAsync(d => d.DeviceId == deviceId);
+            if (device == null)
+            {
+                return BadRequest(deviceId);
+            }
 
+            device.Active = device.Active != true;
+            
+            _context.Update(device);
+            await _context.SaveChangesAsync();
             return Ok(deviceId);
         }
+
+
     }
 
 }

@@ -147,7 +147,7 @@ export class AccountCreation extends React.Component {
                              </div>
                             
                             <div className="form-group ">
-                                <input type="submit" value="Застосувати налаштування" class="btn btn-success"></input>
+                                <input type="submit" value="Додати користувача" class="btn btn-success"></input>
                             </div>
                             
                     </div>
