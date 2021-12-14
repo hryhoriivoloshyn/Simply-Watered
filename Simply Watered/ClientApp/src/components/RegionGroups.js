@@ -113,15 +113,10 @@ export class GroupList extends Component {
     //Загрузка данных
     async loadData() {
         const token = await authService.getAccessToken();
-        console.log(token);
-
         const response = await fetch('api/regiongroups', {
             headers: !token ? { 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
         });
-        
-        console.log(response);
         const data = await response.json();
-        console.log(data);
         this.setState({ regiongroups: data, loading: false });
     }
 

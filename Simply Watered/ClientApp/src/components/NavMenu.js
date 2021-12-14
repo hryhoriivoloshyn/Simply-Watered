@@ -3,6 +3,7 @@ import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLi
 import { Link } from 'react-router-dom';
 import { LoginMenu } from './api-authorization/LoginMenu';
 import './NavMenu.css';
+import authService from './api-authorization/AuthorizeService'
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -12,8 +13,29 @@ export class NavMenu extends Component {
 
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
-      collapsed: true
+      collapsed: true,
+      admin: false,
+
     };
+  }
+
+  componentDidMount(){
+    this.loadUser();
+  }
+
+  async loadUser() {
+    const token = await authService.getAccessToken();
+    const response = await fetch(`api/admin`, {
+        method: "GET",
+        headers: !token ? { 
+            'Content-Type': 'application/json'
+         } : {
+              'Content-Type': 'application/json',
+               'Authorization': `Bearer ${token}` 
+            },
+    });
+    const data = await response.json();
+    this.setState({ admin: data});
   }
 
   toggleNavbar () {
@@ -23,7 +45,10 @@ export class NavMenu extends Component {
   }
 
   render () {
+ 
+
     return (
+      <>
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
           <Container>
@@ -32,9 +57,22 @@ export class NavMenu extends Component {
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
               <ul className="navbar-nav flex-grow">
 
+              {!this.state.admin && 
                 <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/regiongroups">Переглянути ділянки</NavLink>
                 </NavItem>
+              }
+                {this.state.admin && 
+                <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/admin/users">Переглянути користувачів</NavLink>
+                </NavItem>
+                }
+                 {this.state.admin && 
+                <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/admin/devices">Переглянути пристрої</NavLink>
+                </NavItem>
+
+                }
                 <LoginMenu>
                 </LoginMenu>
               </ul>
@@ -42,6 +80,7 @@ export class NavMenu extends Component {
           </Container>
         </Navbar>
       </header>
+      </>
     );
   }
 }

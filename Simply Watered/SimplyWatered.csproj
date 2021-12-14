@@ -54,6 +54,10 @@
     <Compile Remove="Migrations\20211203130144_DefaultHumidity.Designer.cs" />
     <Compile Remove="Migrations\20211203130250_DefaultHumidity.cs" />
     <Compile Remove="Migrations\20211203130250_DefaultHumidity.Designer.cs" />
+    <Compile Remove="Migrations\20211207085920_DeviceActiveField.cs" />
+    <Compile Remove="Migrations\20211207085920_DeviceActiveField.Designer.cs" />
+    <Compile Remove="Migrations\20211207090128_DeviceActiveField.cs" />
+    <Compile Remove="Migrations\20211207090128_DeviceActiveField.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

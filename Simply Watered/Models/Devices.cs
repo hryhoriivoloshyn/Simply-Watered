@@ -24,6 +24,8 @@ namespace Simply_Watered.Models
         public string SerialNumber { get; set; }
         public long? TypeId { get; set; }
 
+        public bool? Active { get; set; }
+
         public virtual IrrigationModes IrrigMode { get; set; }
         public virtual Regions Region { get; set; }
 

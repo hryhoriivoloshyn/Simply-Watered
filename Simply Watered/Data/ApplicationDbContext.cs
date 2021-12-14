@@ -71,6 +71,7 @@ namespace Simply_Watered.Data
 
                 entity.Property(e => e.MaxHumidity).IsRequired().HasDefaultValue(80);
 
+                entity.Property(e => e.Active).IsRequired().HasDefaultValue(true);
 
                 entity.HasOne(d => d.IrrigMode)
                     .WithMany(p => p.Devices)
