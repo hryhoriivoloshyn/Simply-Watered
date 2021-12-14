@@ -86,7 +86,7 @@ export class UserList extends Component {
     //Загрузка данных
     async loadData() {
         const token = await authService.getAccessToken();
-        const response = await fetch('api/users', {
+        const response = await fetch(`api${this.state.pathname}`, {
             headers: !token ? { 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
         });
         const data = await response.json();

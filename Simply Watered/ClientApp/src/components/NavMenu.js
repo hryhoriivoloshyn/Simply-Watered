@@ -57,9 +57,11 @@ export class NavMenu extends Component {
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
               <ul className="navbar-nav flex-grow">
 
+              {!this.state.admin && 
                 <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/regiongroups">Переглянути ділянки</NavLink>
                 </NavItem>
+              }
                 {this.state.admin && 
                 <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/admin/users">Переглянути користувачів</NavLink>

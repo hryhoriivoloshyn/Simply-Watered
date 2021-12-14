@@ -37,6 +37,10 @@ namespace Simply_Watered.Controllers
             //var user = await _context.Users.FirstOrDefaultAsync(i => i.Id == userId);
             var adminRoleId = await _context.Roles.FirstOrDefaultAsync(i => i.Name == "admin");
             var userRole = await _context.UserRoles.FirstOrDefaultAsync(i => i.UserId == userId);
+            if (userRole == null)
+            {
+                return false;
+            }
             if (userRole.RoleId == adminRoleId.Id)
             {
                 return true;

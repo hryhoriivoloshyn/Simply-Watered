@@ -12,7 +12,7 @@ export class AccountCreation extends React.Component {
         super(props);
 
         this.state = {
-            resourcepath: "/users",
+            resourcepath: "/admin/users",
             modes: this.props.modes,
             errorServerMessage: '',
             maxHumidityDisabled: true,
