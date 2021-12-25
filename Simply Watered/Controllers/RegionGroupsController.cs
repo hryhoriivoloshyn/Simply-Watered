@@ -24,22 +24,48 @@ namespace Simply_Watered.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegionGroupsController> _logger;
+        
 
         public RegionGroupsController(ILogger<RegionGroupsController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _context = context;
             _userManager = userManager;
-
+           
         }
 
 
+
+        public class Test
+        {
+           
+            public string userid { get; set; }
+
+        }
         [HttpGet]
         public IEnumerable<RegionGroups> Get()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var userId = "839c3a06-9e5e-4664-8a65-7b97b6f8ea97";
             IEnumerable<RegionGroups> groups = _context.RegionGroups.Where(g => g.UserId == userId).ToArray();
             return groups;
+            //Test test1 = new Test()
+            //{
+
+            //    userid = "First"
+            //};
+
+            //Test test2 = new Test()
+            //{
+
+            //    userid = "Second"
+            //};
+
+            //List<Test> tests= new List<Test>();
+            //tests.Add(test1);
+            //tests.Add(test2);
+
+            //return tests;
         }
 
 

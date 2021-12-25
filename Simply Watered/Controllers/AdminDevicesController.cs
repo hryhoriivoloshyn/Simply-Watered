@@ -13,7 +13,7 @@ using Simply_Watered.Models;
 
 namespace Simply_Watered.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class AdminDevicesController : ControllerBase
