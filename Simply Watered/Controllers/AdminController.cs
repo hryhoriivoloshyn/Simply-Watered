@@ -31,7 +31,7 @@ namespace Simply_Watered.Controllers
         }
 
         [HttpGet]
-        public async Task<bool> Get()
+        public async Task<IActionResult> Get()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             //var user = await _context.Users.FirstOrDefaultAsync(i => i.Id == userId);
@@ -39,13 +39,13 @@ namespace Simply_Watered.Controllers
             var userRole = await _context.UserRoles.FirstOrDefaultAsync(i => i.UserId == userId);
             if (userRole == null)
             {
-                return false;
+                return Ok(false);
             }
             if (userRole.RoleId == adminRoleId.Id)
             {
-                return true;
+                return Ok(true);
             }
-            return false;
+            return Ok(false);
         }
     }
 }

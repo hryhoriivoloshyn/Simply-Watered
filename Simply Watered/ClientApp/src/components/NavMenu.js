@@ -24,18 +24,22 @@ export class NavMenu extends Component {
   }
 
   async loadUser() {
-    const token = await authService.getAccessToken();
-    const response = await fetch(`api/admin`, {
-        method: "GET",
-        headers: !token ? { 
-            'Content-Type': 'application/json'
-         } : {
-              'Content-Type': 'application/json',
-               'Authorization': `Bearer ${token}` 
-            },
-    });
-    const data = await response.json();
-    this.setState({ admin: data});
+    try{
+      const token = await authService.getAccessToken();
+      const response = await fetch(`api/admin`, {
+          method: "GET",
+          headers: !token ? { 
+              'Content-Type': 'application/json'
+           } : {
+                'Content-Type': 'application/json',
+                 'Authorization': `Bearer ${token}` 
+              },
+      });
+      const data = await response.json();
+      this.setState({ admin: data});
+    }catch(err){
+      console.log('error', err);
+    }
   }
 
   toggleNavbar () {
