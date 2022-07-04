@@ -42,9 +42,6 @@ namespace Simply_Watered.Controllers
             return groups;
         }
 
-
-       
-
         public class InputModel
         {
             public string GroupName { get; set; }
@@ -104,11 +101,7 @@ namespace Simply_Watered.Controllers
         [HttpDelete("{Id:long}")]
         public async Task<IActionResult> Delete(long Id)
         {
-            
-          
-            
-            
-                RegionGroups group = _context.RegionGroups.FirstOrDefault(g => g.RegionGroupId == Id);
+            RegionGroups group = _context.RegionGroups.FirstOrDefault(g => g.RegionGroupId == Id);
                 if (group != null)
                 {
                     _context.RegionGroups.Remove(group);

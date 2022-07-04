@@ -53,8 +53,6 @@ export class DeviceAdding extends React.Component {
             SerialNumber: this.state.fields["serialNumber"]
         };
 
-      
-
         let token = await authService.getAccessToken();
 
         await fetch(`api${this.state.path}`, {
@@ -118,16 +116,7 @@ export class DeviceAdding extends React.Component {
                 <div className="col-md-6">
                 <button className="btn btn-secondary" onClick={this.props.goBack}>Повернутися</button>
                 </div>
-            
-{/* 
-            <div>
-                <h2>Введіть серійний номер пристрію</h2>
-                
-                <p>
-                <label>Номер пристрію<input type="text" ref="SerialNumber"></input></label>
-                </p>
-                <button onClick={async () => { await this.onCreateDevice(); }}>Створити ділянку</button>
-            </div> */}
+        
     </>
 )
 }
