@@ -32,33 +32,6 @@ namespace Simply_Watered.Controllers
 
         }
 
-
-
-        //private IEnumerable<IrrigationSchedules> GetSchedulesByGroupId(long groupId)
-        //{
-        //    long[] regionIds = _context.Regions
-        //        .Where(r => r.RegionGroupId == groupId)
-        //        .Select(r => r.RegionId)
-        //        .ToArray();
-
-        //    long[] deviceIds = _context.Devices
-        //        .Where(d => regionIds.Contains((long)d.RegionId))
-        //        .Select(d => d.DeviceId)
-        //        .ToArray();
-
-        //    long[] scheduleIds =
-        //        _context.DevicesSchedules
-        //            .Where(s => deviceIds.Contains(s.DeviceId))
-        //            .Select(s => s.ScheduleId)
-        //            .ToArray();
-
-        //    IEnumerable<IrrigationSchedules> schedules = _context.IrrigationSchedules.Distinct()
-        //        .Where(i => scheduleIds.Contains(i.IrrigScheduleId)).ToList();
-
-        //    return schedules;
-        //}
-
-
         [HttpGet]
         public async Task<SchedulesViewModel> Get(long groupId)
         {

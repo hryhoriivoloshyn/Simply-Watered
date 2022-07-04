@@ -54,7 +54,6 @@ namespace Simply_Watered.Controllers
                     Regions = regions,
                     RegionGroup = regionGroup,
                     Modes=modes,
-                    //Types=types
                 };
 
                 return viewModel;
@@ -85,7 +84,6 @@ namespace Simply_Watered.Controllers
         {
             public string RegionName { get; set; }
             public string RegionDescription { get; set; }
-            //public long GroupId { get; set; }
         }
         [HttpPost]
         public async Task<IActionResult> Post(long groupId, [FromBody] InputModel inputModel)

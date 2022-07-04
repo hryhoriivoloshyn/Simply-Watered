@@ -34,10 +34,7 @@ namespace Simply_Watered.Controllers
         [HttpGet]
         public async Task<ReadingsViewModel> Load(long deviceId)
         {
-           
-            
-                
-                IEnumerable<DeviceReadings> deviceReadings =  _context.DeviceReadings.Where(r => r.DeviceId == deviceId).ToArray();
+            IEnumerable<DeviceReadings> deviceReadings =  _context.DeviceReadings.Where(r => r.DeviceId == deviceId).ToArray();
 
                 Devices device = _context.Devices.FirstOrDefault(d => d.DeviceId == deviceId);
                 device.DeviceType = _context.DeviceTypes.FirstOrDefault(t => t.TypeId == device.TypeId);
@@ -49,9 +46,7 @@ namespace Simply_Watered.Controllers
                 };
                 
                 return viewModel;
-            
-
-         
+                
         }
 
     }

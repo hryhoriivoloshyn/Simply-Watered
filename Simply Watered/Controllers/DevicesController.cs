@@ -61,10 +61,7 @@ namespace Simply_Watered.Controllers
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-
             
-          
-               
                 Devices device = _context.Devices.FirstOrDefault(r => r.DeviceId == id);
                 if (device != null)
                 {
@@ -72,19 +69,11 @@ namespace Simply_Watered.Controllers
                     device.MinimalHumidity = 50;
                     device.MaxHumidity = 80;
                     _context.Devices.Update(device);
-                    //IEnumerable<DevicesSchedules> deviceSchedules= await _context.DevicesSchedules.Where(s => s.DeviceId == id).ToListAsync();
-                    //if (deviceSchedules != null)
-                    //{
-                    //    _context.DevicesSchedules.RemoveRange(deviceSchedules);
-                    //}
-                  
                     await _context.SaveChangesAsync();
                     return Ok(id);
                 }
 
                 return BadRequest();
-
-
 
         }
 

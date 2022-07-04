@@ -34,7 +34,6 @@ namespace Simply_Watered.Controllers
         [HttpGet]
         public async Task<IEnumerable<ApplicationUser>> Get()
         {
-       
             IEnumerable<ApplicationUser> users = await _context.Users.ToListAsync();
             return users;
         }

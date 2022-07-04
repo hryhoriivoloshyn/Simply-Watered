@@ -34,9 +34,6 @@ namespace Simply_Watered.Controllers
         [HttpGet]
         public async Task<IrrigationHistoryViewModel> Get(long deviceId)
         {
-
-
-
             try
             {
                 IEnumerable<IrrigationHistory> histories =  _context.IrrigationHistory
@@ -58,11 +55,6 @@ namespace Simply_Watered.Controllers
                 return null;
             }
             
-
-           
-
-
-
         }
 
     }
